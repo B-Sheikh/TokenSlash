@@ -1,0 +1,14 @@
+{
+  "name": "tokenslash",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TokenSlash — MCP-based prompt cost analyzer and optimizer",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @tokenslash/server",
+    "build": "npm run build -w @tokenslash/server",
+    "test": "npm run test -w @tokenslash/server"
+  }
+}
