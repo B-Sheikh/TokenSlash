@@ -1,7 +1,7 @@
 {
-  "name": "promptiq-server",
+  "name": "tokenslash-server",
   "version": "1.0.0",
-  "description": "PromptIQ MCP Server Tools - Model Recommender & History Analyzer with Satisfaction ML Model",
+  "description": "TokenSlash MCP Server Tools - Model Recommender & History Analyzer with Satisfaction ML Model",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

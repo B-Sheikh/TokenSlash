@@ -161,7 +161,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading, o
             Supercharge Your Prompts
           </h1>
           <p className="text-slate-400 text-sm mt-1 max-w-2xl">
-            Paste verbose instructions, legacy prompts, or code specs. PromptIQ’s MCP engine eliminates token bloat and maps tasks to the most cost-effective LLM tier in under 3 seconds.
+            Paste verbose instructions, legacy prompts, or code specs. TokenSlash’s MCP engine eliminates token bloat and maps tasks to the most cost-effective LLM tier in under 3 seconds.
           </p>
         </div>
 

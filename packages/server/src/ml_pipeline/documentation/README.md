@@ -1,6 +1,6 @@
-# 🚀 PromptIQ Machine Learning Pipeline & Usage Intelligence Engine
+# 🚀 TokenSlash Machine Learning Pipeline & Usage Intelligence Engine
 
-PromptIQ is an **AI Usage Intelligence Engine** designed to predict the **optimal AI model** for every user prompt by balancing user satisfaction, prompt characteristics, NLP phrase vectorization, benchmark capabilities, pricing, latency, expected retries, and business constraints.
+TokenSlash is an **AI Usage Intelligence Engine** designed to predict the **optimal AI model** for every user prompt by balancing user satisfaction, prompt characteristics, NLP phrase vectorization, benchmark capabilities, pricing, latency, expected retries, and business constraints.
 
 ---
 
@@ -33,7 +33,7 @@ PromptIQ is an **AI Usage Intelligence Engine** designed to predict the **optima
                               │
                               ▼
   ┌────────────────────────────────────────────────────────┐
-  │ 5. Multi-Objective PromptIQ Scoring Engine              │
+  │ 5. Multi-Objective TokenSlash Scoring Engine              │
   │    Formula: Score = f(Sat, CapabilityFit, Cost, Lat,   │
   │                       HiddenRetries, BusinessRules)    │
   └───────────────────────────┬────────────────────────────┘

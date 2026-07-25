@@ -25,24 +25,24 @@ except ImportError:
     pass
 
 try:
-    from ..features.feature_extractor import PromptIQFeatureExtractor
+    from ..features.feature_extractor import TokenSlashFeatureExtractor
     from ..dataset.fetch_public_datasets import get_official_pricing_data, get_ai_benchmark_scores
-    from .promptiq_scoring import calculate_promptiq_score
+    from .tokenslash_scoring import calculate_tokenslash_score
 except (ImportError, ValueError):
     import sys
     base_dir = os.path.dirname(os.path.abspath(__file__))
     sys.path.append(os.path.abspath(os.path.join(base_dir, "..")))
-    from features.feature_extractor import PromptIQFeatureExtractor
+    from features.feature_extractor import TokenSlashFeatureExtractor
     from dataset.fetch_public_datasets import get_official_pricing_data, get_ai_benchmark_scores
-    from predictor.promptiq_scoring import calculate_promptiq_score
+    from predictor.tokenslash_scoring import calculate_tokenslash_score
 
-class PromptIQInferenceEngine:
+class TokenSlashInferenceEngine:
     def __init__(self, models_dir=None):
         if models_dir is None:
             models_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models")
         
         self.models_dir = models_dir
-        self.extractor = PromptIQFeatureExtractor()
+        self.extractor = TokenSlashFeatureExtractor()
         self.pricing = get_official_pricing_data()
         self.benchmarks = get_ai_benchmark_scores()
         
@@ -120,8 +120,8 @@ class PromptIQInferenceEngine:
             hidden_retry_cost = est_cost * pred_ret
             total_cost_per_req = est_cost + hidden_retry_cost
 
-            # Multi-objective PromptIQ Score
-            score = calculate_promptiq_score(
+            # Multi-objective TokenSlash Score
+            score = calculate_tokenslash_score(
                 pred_sat, pred_ret, pred_lat, est_cost, hidden_retry_cost, cap_fit,
                 business_constraints=business_constraints
             )
@@ -132,7 +132,7 @@ class PromptIQInferenceEngine:
             all_candidate_results.append({
                 "model": model_name,
                 "provider": m_meta["provider"],
-                "promptiqScore": score,
+                "tokenslashScore": score,
                 "predictedSatisfaction": round(pred_sat, 1),
                 "predictedRetries": round(pred_ret, 2),
                 "predictedLatencySec": round(pred_lat, 2),
@@ -143,14 +143,14 @@ class PromptIQInferenceEngine:
                 "capabilityFit": cap_fit
             })
 
-        # Rank candidates by PromptIQ Score descending
-        all_candidate_results.sort(key=lambda x: x["promptiqScore"], reverse=True)
+        # Rank candidates by TokenSlash Score descending
+        all_candidate_results.sort(key=lambda x: x["tokenslashScore"], reverse=True)
         winner = all_candidate_results[0]
 
         # Generate decision explanation
         explanation = (
-            f"PromptIQ ML Intelligence Engine selected {winner['model']} ({winner['provider']}) "
-            f"with a top PromptIQ Score of {winner['promptiqScore']}/100. "
+            f"TokenSlash ML Intelligence Engine selected {winner['model']} ({winner['provider']}) "
+            f"with a top TokenSlash Score of {winner['tokenslashScore']}/100. "
             f"It achieves {winner['predictedSatisfaction']}% predicted user satisfaction, "
             f"a low retry risk of {winner['predictedRetries']} retries, and {winner['predictedLatencySec']}s latency. "
             f"Switching from {current_model} yields projected monthly savings of ${winner['projectedMonthlySavings']:.2f}."
@@ -159,8 +159,8 @@ class PromptIQInferenceEngine:
         return {
             "recommendedModel": winner["model"],
             "provider": winner["provider"],
-            "promptiqScore": winner["promptiqScore"],
-            "confidenceScore": round(min(0.99, 0.85 + (winner["promptiqScore"] / 1000.0)), 2),
+            "tokenslashScore": winner["tokenslashScore"],
+            "confidenceScore": round(min(0.99, 0.85 + (winner["tokenslashScore"] / 1000.0)), 2),
             "estimatedCost": winner["estimatedCost"],
             "hiddenRetryCost": winner["hiddenRetryCost"],
             "expectedSatisfaction": winner["predictedSatisfaction"],
@@ -172,8 +172,8 @@ class PromptIQInferenceEngine:
         }
 
 if __name__ == "__main__":
-    engine = PromptIQInferenceEngine()
+    engine = TokenSlashInferenceEngine()
     test_prompt = "Refactor this React component step by step using Next.js Server Actions and Zod schema validation."
     result = engine.predict_recommendation(test_prompt)
-    print("\n--- PromptIQ ML Inference Test Output ---")
+    print("\n--- TokenSlash ML Inference Test Output ---")
     print(json.dumps(result, indent=2))

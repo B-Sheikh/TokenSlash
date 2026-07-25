@@ -9,7 +9,7 @@ const { recommendModel, recommendModelSchema } = require(recommenderModulePath);
 const { analyzeHistory, analyzeHistorySchema } = require(analyzerModulePath);
 
 console.log('====================================================');
-console.log('   PromptIQ MCP Tools & ML Verification Suite');
+console.log('   TokenSlash MCP Tools & ML Verification Suite');
 console.log('====================================================\n');
 
 let totalTests = 0;

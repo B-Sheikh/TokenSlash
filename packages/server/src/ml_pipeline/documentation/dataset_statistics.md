@@ -1,4 +1,4 @@
-# 📈 PromptIQ Dataset Statistics & Coverage Report
+# 📈 TokenSlash Dataset Statistics & Coverage Report
 
 ### Data Source Breakdown
 * **Public Conversation Sources**: LMSYS Chat-1M, OpenAssistant (oasst1), UltraChat 200k, ShareGPT52K, Dolly 15k, Alpaca, MT-Bench

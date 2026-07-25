@@ -6,7 +6,7 @@ root_dir = os.path.dirname(os.path.abspath(__file__))
 if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
-from packages.server.src.ml_pipeline.predictor.inference_engine import PromptIQInferenceEngine
+from packages.server.src.ml_pipeline.predictor.inference_engine import TokenSlashInferenceEngine
 
 def main():
     # Prompt input (from CLI argument or fallback default)
@@ -15,8 +15,8 @@ def main():
     else:
         user_prompt = "Refactor this React component step by step using Next.js Server Actions and Zod validation."
 
-    print("\n[PromptIQ] Initializing ML Usage Intelligence Engine...")
-    engine = PromptIQInferenceEngine()
+    print("\n[TokenSlash] Initializing ML Usage Intelligence Engine...")
+    engine = TokenSlashInferenceEngine()
 
     # Predict optimal AI model recommendation
     result = engine.predict_recommendation(
@@ -26,11 +26,11 @@ def main():
 
     # Print results
     print("\n========================================================")
-    print("              PROMPTIQ ML RECOMMENDATION SUMMARY         ")
+    print("              TOKENSLASH ML RECOMMENDATION SUMMARY         ")
     print("========================================================")
     print(f"PROMPT TESTED:             '{user_prompt}'")
     print(f"RECOMMENDED MODEL:         {result['recommendedModel']} ({result['provider']})")
-    print(f"PROMPTIQ SCORE:            {result['promptiqScore']}/100")
+    print(f"TOKENSLASH SCORE:            {result['tokenslashScore']}/100")
     print(f"CONFIDENCE SCORE:          {result['confidenceScore'] * 100:.1f}%")
     print(f"EXPECTED SATISFACTION:     {result['expectedSatisfaction']}%")
     print(f"EXPECTED LATENCY:          {result['expectedLatencySec']} seconds")

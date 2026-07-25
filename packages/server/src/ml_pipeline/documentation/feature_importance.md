@@ -1,4 +1,4 @@
-# 🔍 PromptIQ Feature Importance & Model Explainability Report
+# 🔍 TokenSlash Feature Importance & Model Explainability Report
 
 ### Top Feature Rankings Across All 3 Targets
 

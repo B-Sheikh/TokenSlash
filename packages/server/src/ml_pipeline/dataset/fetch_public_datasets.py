@@ -19,7 +19,7 @@ def fetch_lmsys_and_hf_datasets(max_samples=1500):
     
     # Trusted public dataset streaming endpoints & fallbacks
     url = "https://huggingface.co/datasets/P1ayer-1/chatgpt-conversations-chatlogs.net/resolve/main/chatlogs.jsonl"
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 PromptIQ-ML/1.0'})
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 TokenSlash-ML/1.0'})
     
     conversations = []
     try:

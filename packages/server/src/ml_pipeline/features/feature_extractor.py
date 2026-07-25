@@ -16,7 +16,7 @@ CORE_PHRASES = [
     "machine learning", "deep learning", "computer vision", "nlp"
 ]
 
-class PromptIQFeatureExtractor:
+class TokenSlashFeatureExtractor:
     def __init__(self):
         self.phrases = CORE_PHRASES
 
@@ -162,7 +162,7 @@ def build_feature_matrix(clean_dataset_path, output_matrix_path):
         data = json.load(f)
 
     entries = data.get("entries", [])
-    extractor = PromptIQFeatureExtractor()
+    extractor = TokenSlashFeatureExtractor()
 
     # Load metadata benchmarks & pricing
     try:
@@ -213,6 +213,6 @@ def build_feature_matrix(clean_dataset_path, output_matrix_path):
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    clean_path = os.path.join(base_dir, "..", "processed", "unified_promptiq_dataset.json")
+    clean_path = os.path.join(base_dir, "..", "processed", "unified_tokenslash_dataset.json")
     out_matrix = os.path.join(base_dir, "feature_matrix.json")
     build_feature_matrix(clean_path, out_matrix)

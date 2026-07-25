@@ -1,9 +1,14 @@
+import { Injectable } from '@nitrostack/core';
 import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { HistoryAnalyzerResult, PromptHistoryEntry, SatisfactionModelWeights, SatisfactionMetrics } from '../shared/types.js';
 import { recommendModel } from './model-recommender.tool.js';
 import { Tool } from './model-recommender.tool.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function loadJsonData(relPath: string) {
   const possiblePaths = [
@@ -273,3 +278,11 @@ const historyAnalyzerInstance = new HistoryAnalyzerTool();
 export function analyzeHistory(userId: string, currentPrompt?: string): HistoryAnalyzerResult {
   return historyAnalyzerInstance.analyzeHistory(userId, currentPrompt);
 }
+
+@Injectable()
+export class HistoryAnalyzerService {
+  analyzeHistory(userId: string, currentPrompt?: string): HistoryAnalyzerResult {
+    return analyzeHistory(userId, currentPrompt);
+  }
+}
+

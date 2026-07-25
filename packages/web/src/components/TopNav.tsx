@@ -48,7 +48,7 @@ export const TopNav: React.FC<TopNavProps> = ({ status }) => {
           </div>
           <div>
             <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
-              PromptIQ
+              TokenSlash
             </span>
             <span className="ml-2 px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded">
               PRO

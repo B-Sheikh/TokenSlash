@@ -1,4 +1,4 @@
-# 🎙️ PromptIQ Live Hackathon Presentation Script (DEMO.md)
+# 🎙️ TokenSlash Live Hackathon Presentation Script (DEMO.md)
 
 **Target Duration**: 3 Minutes  
 **Primary Display**: 1080p / 1440p Laptop Projector View (Dark Mode)  
@@ -12,7 +12,7 @@
 **Speaker**: 
 > "Judges, every day engineering teams waste thousands of dollars and introduce severe application instability by sending verbose, unstructured conversational prompts to expensive reasoning models like GPT-4o and Claude 3 Opus. 
 > 
-> Welcome to **PromptIQ** — an enterprise AI workspace built on our custom **NitroStack MCP framework** that transforms messy human instructions into precision-engineered, Zod-validated schemas while cutting compute costs by over 80%."
+> Welcome to **TokenSlash** — an enterprise AI workspace built on our custom **NitroStack MCP framework** that transforms messy human instructions into precision-engineered, Zod-validated schemas while cutting compute costs by over 80%."
 
 *Navigator points mouse at the top status badge and glowing Hero Console.*
 
@@ -40,7 +40,7 @@
 *Navigator scrolls slightly to show the 2-column Prompt Architecture Comparison.*
 
 **Speaker**:
-> "On the left is the legacy prompt — 40% conversational fluff. On the right, PromptIQ automatically stripped conversational filler and wrapped instructions in strict XML `<task>` and `<requirements>` delimiters with inline Zod validation rules. 
+> "On the left is the legacy prompt — 40% conversational fluff. On the right, TokenSlash automatically stripped conversational filler and wrapped instructions in strict XML `<task>` and `<requirements>` delimiters with inline Zod validation rules. 
 > 
 > Because this prompt is now mathematically precise, our MCP Model Recommender successfully downgraded the required compute tier from an expensive reasoning model down to **Gemini 1.5 Flash** — reducing latency by 3.4x while maintaining 99.1% parity with GPT-4o."
 
@@ -54,6 +54,6 @@
 **Speaker**:
 > "Here in our SaaS trade-off analysis, you can see the exact per-request arithmetic and multi-dimensional performance radar. 
 >
-> Best of all, as the repository gatekeepers, we engineered this frontend with **zero-breakage contracts and graceful degradation**. If an upstream LLM provider experiences outages, PromptIQ falls back seamlessly without ever crashing the user session or throwing console errors.
+> Best of all, as the repository gatekeepers, we engineered this frontend with **zero-breakage contracts and graceful degradation**. If an upstream LLM provider experiences outages, TokenSlash falls back seamlessly without ever crashing the user session or throwing console errors.
 > 
-> Thank you! We are PromptIQ, and we are ready for your questions."
+> Thank you! We are TokenSlash, and we are ready for your questions."

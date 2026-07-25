@@ -63,7 +63,7 @@ def generate_evaluation_report(matrix_path, models_dir_path, output_report_path)
             feature_importances[name] = dict(ranked[:15])  # Top 15 features
 
     report = {
-        "evaluationSummary": "PromptIQ 3-Model Intelligence Suite Performance Report",
+        "evaluationSummary": "TokenSlash 3-Model Intelligence Suite Performance Report",
         "sampleCount": len(rows),
         "featureCount": len(feature_names),
         "targetModels": metadata.get("models", {}),

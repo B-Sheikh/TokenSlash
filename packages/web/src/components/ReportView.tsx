@@ -80,7 +80,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, onReset }) => {
   // Recharts Data Sets
   const barChartData = [
     { name: 'Original (Legacy)', tokens: report.originalTokens, cost: report.costComparison.currentModel.perRequestCost * 1000 },
-    { name: 'Optimized (PromptIQ)', tokens: report.optimizedTokens, cost: report.costComparison.recommendedModel.perRequestCost * 1000 },
+    { name: 'Optimized (TokenSlash)', tokens: report.optimizedTokens, cost: report.costComparison.recommendedModel.perRequestCost * 1000 },
   ];
 
   const savingsTrendData = [
@@ -93,11 +93,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, onReset }) => {
   ];
 
   const radarData = [
-    { metric: 'Cost Efficiency', baseline: 40, promptiq: 98 },
-    { metric: 'Token Density', baseline: 45, promptiq: 95 },
-    { metric: 'Latency Speed', baseline: 50, promptiq: 92 },
-    { metric: 'Syntactic Clarity', baseline: 60, promptiq: 99 },
-    { metric: 'Accuracy Parity', baseline: 96, promptiq: 98 },
+    { metric: 'Cost Efficiency', baseline: 40, tokenslash: 98 },
+    { metric: 'Token Density', baseline: 45, tokenslash: 95 },
+    { metric: 'Latency Speed', baseline: 50, tokenslash: 92 },
+    { metric: 'Syntactic Clarity', baseline: 60, tokenslash: 99 },
+    { metric: 'Accuracy Parity', baseline: 96, tokenslash: 98 },
   ];
 
   const containerVariants = {
@@ -279,7 +279,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, onReset }) => {
             <div className="px-5 py-3 bg-[#0E131A] border-b border-cyan-500/20 flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 glow-cyan animate-pulse" />
-                <span className="text-xs font-mono font-bold text-cyan-300">PROMPTIQ OPTIMIZED (XML DELIMITED)</span>
+                <span className="text-xs font-mono font-bold text-cyan-300">TOKENSLASH OPTIMIZED (XML DELIMITED)</span>
               </div>
               <div className="flex items-center gap-3 text-xs font-mono text-cyan-400 font-semibold">
                 <span>{report.optimizedTokens} tokens (-{report.tokenSavingsPercentage.toFixed(0)}%)</span>
@@ -460,11 +460,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, onReset }) => {
             <span>Multi-Dimensional Performance Radar</span>
           </h4>
           <p className="text-xs text-slate-300 leading-relaxed">
-            While legacy baselines score well on brute-force accuracy, they suffer heavily in cost efficiency and latency. PromptIQ’s MCP optimization achieves near-perfect syntactic clarity and speed while maintaining 98% accuracy parity.
+            While legacy baselines score well on brute-force accuracy, they suffer heavily in cost efficiency and latency. TokenSlash’s MCP optimization achieves near-perfect syntactic clarity and speed while maintaining 98% accuracy parity.
           </p>
           <div className="flex items-center gap-4 text-xs font-mono pt-2">
             <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-              <span className="w-3 h-3 rounded-full bg-cyan-400 inline-block" /> PromptIQ Optimized
+              <span className="w-3 h-3 rounded-full bg-cyan-400 inline-block" /> TokenSlash Optimized
             </span>
             <span className="flex items-center gap-1.5 text-slate-400">
               <span className="w-3 h-3 rounded-full bg-slate-500 inline-block" /> Legacy Baseline
@@ -478,7 +478,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ report, onReset }) => {
               <PolarGrid stroke="rgba(255,255,255,0.1)" />
               <PolarAngleAxis dataKey="metric" stroke="#94a3b8" fontSize={11} />
               <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="transparent" />
-              <Radar name="PromptIQ Optimized" dataKey="promptiq" stroke="#00F2FE" fill="#00F2FE" fillOpacity={0.3} />
+              <Radar name="TokenSlash Optimized" dataKey="tokenslash" stroke="#00F2FE" fill="#00F2FE" fillOpacity={0.3} />
               <Radar name="Legacy Baseline" dataKey="baseline" stroke="#64748b" fill="#64748b" fillOpacity={0.2} />
               <Tooltip contentStyle={{ backgroundColor: '#161C26', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff', fontSize: '12px' }} />
             </RadarChart>

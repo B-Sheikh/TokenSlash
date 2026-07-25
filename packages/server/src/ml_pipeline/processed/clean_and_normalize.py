@@ -41,7 +41,7 @@ def calculate_complexity(prompt_text):
     return min(10, max(1, complexity))
 
 def infer_task_type(prompt_text):
-    """Classifies task type into standard PromptIQ taxonomy."""
+    """Classifies task type into standard TokenSlash taxonomy."""
     text_lower = prompt_text.lower()
     if re.search(r'```|function|class|bug|fix|code|refactor|react|python|script|api|component', text_lower):
         return "code_generation"
@@ -144,7 +144,7 @@ def process_raw_dataset(raw_dataset_path, output_path):
         satisfaction_score = max(10, min(100, int(100 - tier_mismatch * 28 - retries_count * 22 + random.uniform(-6, 6))))
 
         entry = {
-            "id": f"promptiq-clean-{idx+1:05d}",
+            "id": f"tokenslash-clean-{idx+1:05d}",
             "userId": f"user-cohort-{(idx % 15) + 1}",
             "promptText": cleaned_prompt,
             "responseText": resp_text[:500],
@@ -170,7 +170,7 @@ def process_raw_dataset(raw_dataset_path, output_path):
                 for item in mh:
                     comp = item.get("complexityScore", 4)
                     cleaned_entries.append({
-                        "id": f"promptiq-mock-{len(cleaned_entries)+1:05d}",
+                        "id": f"tokenslash-mock-{len(cleaned_entries)+1:05d}",
                         "userId": item.get("userId", "user-mock"),
                         "promptText": item.get("promptText", "Analyze prompt metrics"),
                         "responseText": "Synthetic parsed response",
@@ -185,7 +185,7 @@ def process_raw_dataset(raw_dataset_path, output_path):
                     })
 
     output_pkg = {
-        "datasetName": "Unified PromptIQ ML Clean Dataset",
+        "datasetName": "Unified TokenSlash ML Clean Dataset",
         "sampleSize": len(cleaned_entries),
         "entries": cleaned_entries
     }
@@ -200,5 +200,5 @@ def process_raw_dataset(raw_dataset_path, output_path):
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     raw_path = os.path.join(base_dir, "..", "dataset", "raw_datasets.json")
-    out_path = os.path.join(base_dir, "unified_promptiq_dataset.json")
+    out_path = os.path.join(base_dir, "unified_tokenslash_dataset.json")
     process_raw_dataset(raw_path, out_path)

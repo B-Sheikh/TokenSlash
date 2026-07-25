@@ -1,14 +1,14 @@
-# PromptIQ — Enterprise AI Workspace & Prompt Optimization Platform ⚡
+# TokenSlash — Enterprise AI Workspace & Prompt Optimization Platform ⚡
 
 [![Hackathon Ready](https://img.shields.io/badge/Hackathon-NitroStack_MCP-00F2FE?style=for-the-badge&logo=google-deepmind&logoColor=black)](https://github.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3B82F6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![UI Polish](https://img.shields.io/badge/UI_Design-%24100M_SaaS_Grade-10B981?style=for-the-badge)](https://tailwindcss.com)
 
-**PromptIQ** is an award-winning, AI-first developer workspace designed to eliminate prompt bloat, enforce Zod schema validation rules, and dynamically route compute across LLM tiers using our custom **NitroStack MCP Engine**.
+**TokenSlash** is an award-winning, AI-first developer workspace designed to eliminate prompt bloat, enforce Zod schema validation rules, and dynamically route compute across LLM tiers using our custom **NitroStack MCP Engine**.
 
 ---
 
-## 🌟 Why PromptIQ Wins
+## 🌟 Why TokenSlash Wins
 1. **Instantly Legible ROI**: Displays projected monthly enterprise savings as the undisputed hero element on the page, backed by interactive 6-month growth charts.
 2. **Zero-Drift MCP Architecture**: Built on a modular monorepo cleanly separating frontend dashboard presentation (`packages/web`) from backend Model Recommender and History Analyzer tools (`packages/server`).
 3. **Sub-3 Second Execution**: Delivers real-time AST prompt analysis, token reduction telemetry, and cost trade-off comparisons with zero console errors.
@@ -19,7 +19,7 @@
 ## 🏗️ Monorepo Structure
 
 ```text
-promptiq/
+tokenslash/
 ├── packages/
 │   ├── web/                     # React + TypeScript + Tailwind UI Dashboard
 │   │   ├── src/

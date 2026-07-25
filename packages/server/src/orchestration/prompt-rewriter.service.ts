@@ -39,8 +39,10 @@ export class PromptRewriterService {
 
     if (trimmed.length === 0) {
       return {
+        originalPrompt: prompt,
         optimizedPrompt: '',
         tokenSavingsPercent: 0,
+        taskType,
       };
     }
 
@@ -65,8 +67,10 @@ export class PromptRewriterService {
     const tokenSavingsPercent = this.computeSavingsPercent(trimmed, optimizedPrompt);
 
     return {
+      originalPrompt: prompt,
       optimizedPrompt,
       tokenSavingsPercent,
+      taskType,
     };
   }
 

@@ -12,6 +12,62 @@ export interface TaskTypeDefinition {
 /** Minimum model capability tier required for a complexity level. */
 export type ModelTier = 'budget' | 'standard' | 'premium' | 'reasoning';
 
+/** Domain classification definition. */
+export interface DomainDefinition {
+  id: string;
+  label: string;
+  signals: readonly string[];
+}
+
+/**
+ * Action verbs that indicate implicit multi-step structure when ≥3 appear
+ * in a single prompt (joined by commas, "and", or sentence boundaries).
+ */
+export const IMPLICIT_MULTI_STEP_VERBS: readonly string[] = [
+  'analyze', 'identify', 'forecast', 'create', 'compare', 'summarize',
+  'extract', 'generate', 'evaluate', 'classify', 'predict', 'calculate',
+  'transform', 'aggregate', 'filter', 'rank', 'segment', 'correlate',
+  'visualize', 'build', 'design', 'implement', 'optimize', 'assess',
+  'review', 'benchmark', 'compile', 'map', 'outline', 'draft',
+];
+
+/**
+ * Signals for data-processing context — file formats, quantity/scale words,
+ * and forecasting/trend language that push toward data-analysis and bump complexity.
+ */
+export const DATA_PROCESSING_SIGNALS = {
+  fileFormats: ['csv', 'json', 'excel', 'xlsx', 'parquet', 'tsv', 'sql', 'xml', 'pdf'],
+  quantityWords: ['regions', 'months', 'rows', 'records', 'columns', 'entries',
+    'quarters', 'years', 'segments', 'categories', 'datasets', 'tables'],
+  forecastTrend: ['forecast', 'trend', 'predict', 'projection', 'growth',
+    'decline', 'revenue', 'seasonal', 'year-over-year', 'quarter-over-quarter',
+    'historical data', 'time series'],
+} as const;
+
+/** Domain classification definitions for downstream model selection. */
+export const DOMAIN_DEFINITIONS: readonly DomainDefinition[] = [
+  {
+    id: 'business-intelligence',
+    label: 'Business Intelligence',
+    signals: [
+      'revenue', 'sales', 'quarterly', 'roi', 'kpi', 'dashboard',
+      'executive summary', 'forecast', 'market', 'profit', 'margin',
+      'budget', 'pipeline', 'conversion', 'churn', 'retention',
+      'stakeholder', 'board', 'slide', 'presentation', 'regions',
+    ],
+  },
+  {
+    id: 'data-science',
+    label: 'Data Science',
+    signals: [
+      'model', 'regression', 'clustering', 'classification', 'neural',
+      'feature engineering', 'training', 'accuracy', 'precision', 'recall',
+      'dataset', 'pandas', 'numpy', 'scikit', 'tensorflow', 'pytorch',
+      'correlation', 'distribution', 'hypothesis', 'p-value', 'statistics',
+    ],
+  },
+] as const;
+
 export const TASK_TYPE_DEFINITIONS: readonly TaskTypeDefinition[] = [
   {
     id: 'summarization',
@@ -75,6 +131,7 @@ export const TASK_TYPE_DEFINITIONS: readonly TaskTypeDefinition[] = [
       'dataset',
       'chart',
       'analyze data',
+      'analyze',
       'spreadsheet',
       'pandas',
       'sql query',
@@ -82,6 +139,9 @@ export const TASK_TYPE_DEFINITIONS: readonly TaskTypeDefinition[] = [
       'statistics',
       'visualization',
       'excel',
+      'forecast',
+      'trend',
+      'historical data',
     ],
   },
   {
@@ -121,6 +181,7 @@ export const COMPLEXITY_TIER_MAP: Record<ComplexityScore, ModelTier> = {
 export const TASK_TYPE_MIN_TIER: Partial<Record<TaskType, ModelTier>> = {
   reasoning: 'reasoning',
   'code-generation': 'standard',
+  'data-analysis': 'standard',
 };
 
 /** Maximum prompt length processed in full before truncation (characters). */

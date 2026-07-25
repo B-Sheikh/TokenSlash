@@ -2,7 +2,7 @@ import os
 import json
 import numpy as np
 
-def calculate_promptiq_score(
+def calculate_tokenslash_score(
     predicted_satisfaction,
     predicted_retries,
     predicted_latency,
@@ -13,7 +13,7 @@ def calculate_promptiq_score(
     business_constraints=None
 ):
     """
-    Mathematically sound multi-objective PromptIQ Score formula.
+    Mathematically sound multi-objective TokenSlash Score formula.
     
     Formula:
       TotalCost = Cost + HiddenRetryCost

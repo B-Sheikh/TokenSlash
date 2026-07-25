@@ -1,7 +1,12 @@
+import { Injectable } from '@nitrostack/core';
 import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { CapabilityTier, ModelPricing, ModelRecommendationResult, TokenCount } from '../shared/types.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function loadPricingTable() {
   const possiblePaths = [
@@ -155,10 +160,41 @@ export class ModelRecommenderTool {
 // Standalone function export matching expected prompt signature: recommendModel(tokenCount, complexityScore, taskType)
 const recommenderInstance = new ModelRecommenderTool();
 export function recommendModel(
-  tokenCount: TokenCount | { inputTokens: number; outputTokens: number },
-  complexityScore: number,
+  tokenCount: TokenCount | number | { inputTokens: number; outputTokens: number },
+  complexityScore: number | string,
   taskType: string,
   currentModel?: string
 ): ModelRecommendationResult {
-  return recommenderInstance.recommendModel(tokenCount, complexityScore, taskType, currentModel);
+  let tokens: { inputTokens: number; outputTokens: number };
+  if (typeof tokenCount === 'number') {
+    tokens = { inputTokens: tokenCount, outputTokens: Math.max(40, Math.trunc(tokenCount * 0.8)) };
+  } else {
+    tokens = { inputTokens: tokenCount.inputTokens, outputTokens: tokenCount.outputTokens };
+  }
+
+  let scoreNum = 3;
+  if (typeof complexityScore === 'number') {
+    scoreNum = complexityScore;
+  } else if (complexityScore === 'complex') {
+    scoreNum = 8;
+  } else if (complexityScore === 'moderate') {
+    scoreNum = 5;
+  } else {
+    scoreNum = 2;
+  }
+
+  return recommenderInstance.recommendModel(tokens, scoreNum, taskType, currentModel);
 }
+
+@Injectable()
+export class ModelRecommenderService {
+  recommendModel(
+    tokenCount: TokenCount | number | { inputTokens: number; outputTokens: number },
+    complexityScore: number | string,
+    taskType: string,
+    currentModel?: string
+  ): ModelRecommendationResult {
+    return recommendModel(tokenCount, complexityScore, taskType, currentModel);
+  }
+}
+

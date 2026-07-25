@@ -39,7 +39,7 @@
   },
   "monthlySavingsEstimate": 1431.50,
   "confidenceScore": 96,
-  "executionSummary": "PromptIQ's NitroStack engine analyzed syntactic redundancy and structural complexity. Eliminated 285 conversational filler tokens and converted loose instructions into strict XML delimiters. Successfully downgraded required compute tier from heavy reasoning to ultra-fast inference without loss of generation accuracy.",
+  "executionSummary": "TokenSlash's NitroStack engine analyzed syntactic redundancy and structural complexity. Eliminated 285 conversational filler tokens and converted loose instructions into strict XML delimiters. Successfully downgraded required compute tier from heavy reasoning to ultra-fast inference without loss of generation accuracy.",
   "suggestions": [
     "Inject few-shot examples inside <examples> tags to guarantee consistent table formatting.",
     "Enable automatic schema caching to reduce repeated token ingestion by another 15%.",

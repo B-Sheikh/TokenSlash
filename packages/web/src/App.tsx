@@ -45,19 +45,25 @@ export const App: React.FC = () => {
     setError(null);
     setReport(null);
 
+    const apiUrl = import.meta.env.VITE_API_BASE_URL
+      ? `${import.meta.env.VITE_API_BASE_URL}/api/optimize`
+      : '/api/optimize';
+
     try {
-      // Try calling Member C's live NitroStack MCP server API (defaulting to localhost:3001 or /api/optimize)
-      const response = await axios.post('/api/optimize', {
-        prompt: promptText,
-      }, { timeout: 2000 }); // Fast fallback timeout if backend isn't up yet!
-      
+      const response = await axios.post(
+        apiUrl,
+        {
+          prompt: promptText,
+          userId: 'demo-user',
+        },
+        { timeout: 5000 }
+      );
+
       setReport(response.data as FinalReport);
     } catch (err: any) {
-      console.warn('Live API unavailable or timed out. Gracefully falling back to high-fidelity mock report per Checkpoint 1 rules:', err.message);
-      // Simulate professional analysis delay for demo impact
-      await new Promise((resolve) => setTimeout(resolve, 2200));
-      
-      // Customize mock report slightly with user's actual prompt text if provided
+      console.warn('Live API call error or timeout, checking fallback:', err.message);
+      // If server is not responding, fall back gracefully to formatted report
+      await new Promise((resolve) => setTimeout(resolve, 800));
       const customizedMock: FinalReport = {
         ...(mockData as unknown as FinalReport),
         originalPrompt: promptText || (mockData as unknown as FinalReport).originalPrompt,
@@ -214,7 +220,7 @@ export const App: React.FC = () => {
       <footer className="h-10 border-t border-white/[0.04] px-8 bg-[#0B0F14]/90 flex items-center justify-between text-[11px] font-mono text-slate-500 relative z-20">
         <div className="flex items-center gap-2">
           <span className="text-cyan-400">●</span>
-          <span>PromptIQ UI Refactored • Hackathon Ready</span>
+          <span>TokenSlash UI Refactored • Hackathon Ready</span>
         </div>
         <div className="flex items-center gap-4">
           <span>Zero-Breakage MCP Contract</span>
