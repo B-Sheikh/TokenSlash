@@ -1,0 +1,31 @@
+{
+  "originalPrompt": "Please kindly I would like you to write a Python function that sorts a list in ascending order. Make sure it is clean and handles edge cases properly, thank you so much in advance!",
+  "optimizedPrompt": "write a Python function that sorts a list in ascending order. handle edge cases properly.",
+  "tokenSavingsPercent": 42,
+  "recommendedModel": "gpt-4.1-mini",
+  "costComparison": {
+    "currentModel": "gpt-4o",
+    "recommendedModel": "gpt-4.1-mini",
+    "currentCostPerRequest": 0.000285,
+    "recommendedCostPerRequest": 0.000045,
+    "currentMonthlyCost": 0.0125,
+    "recommendedMonthlyCost": 0.002,
+    "savingsPercent": 84
+  },
+  "monthlySavings": 48.75,
+  "tokenCount": 38,
+  "complexityScore": "simple",
+  "taskType": "code-generation",
+  "modelRecommendationReasoning": "Simple code-generation task requires at least standard-tier reasoning models. Downgrading from gpt-4o to gpt-4.1-mini achieves identical accuracy while saving ~84% per request (pricing verified as of 2026-07-25).",
+  "userPatternSummary": "Member Profile (Abhishek): 142 prompts in the last 30 days, primarily code generation and QA. 92% of prompts used a flagship model when a lighter model would suffice. Projected savings with TokenSlash automatic routing: $48.75/mo.",
+  "monthlyPromptVolume": 142,
+  "availability": {
+    "tokenEstimate": true,
+    "complexity": true,
+    "modelRecommendation": true,
+    "history": true,
+    "rewrite": true
+  },
+  "errors": {},
+  "generatedAt": "2026-07-25T18:00:00.000Z"
+}

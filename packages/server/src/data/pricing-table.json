@@ -1,0 +1,72 @@
+{
+  "asOf": "2026-07-25T00:00:00.000Z",
+  "currency": "USD",
+  "note": "Static snapshot from official provider pricing pages. Input/output rates are per 1M tokens.",
+  "providers": {
+    "openai": {
+      "source": "https://openai.com/api/pricing/",
+      "models": {
+        "gpt-4o": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10.0,
+          "tier": "premium",
+          "contextWindow": 128000
+        },
+        "gpt-4o-mini": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "tier": "budget",
+          "contextWindow": 128000
+        },
+        "gpt-4.1-mini": {
+          "inputPer1M": 0.4,
+          "outputPer1M": 1.6,
+          "tier": "standard",
+          "contextWindow": 128000
+        },
+        "o3-mini": {
+          "inputPer1M": 1.1,
+          "outputPer1M": 4.4,
+          "tier": "reasoning",
+          "contextWindow": 200000
+        }
+      }
+    },
+    "anthropic": {
+      "source": "https://docs.anthropic.com/en/docs/about-claude/pricing",
+      "models": {
+        "claude-3-5-sonnet": {
+          "inputPer1M": 3.0,
+          "outputPer1M": 15.0,
+          "tier": "premium",
+          "contextWindow": 200000
+        },
+        "claude-3-5-haiku": {
+          "inputPer1M": 0.8,
+          "outputPer1M": 4.0,
+          "tier": "budget",
+          "contextWindow": 200000
+        }
+      }
+    },
+    "google": {
+      "source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "models": {
+        "gemini-1.5-flash": {
+          "inputPer1M": 0.075,
+          "outputPer1M": 0.3,
+          "tier": "budget",
+          "contextWindow": 1000000
+        },
+        "gemini-1.5-pro": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 5.0,
+          "tier": "standard",
+          "contextWindow": 2000000
+        }
+      }
+    }
+  },
+  "defaultCurrentModel": "gpt-4o",
+  "outputTokenRatio": 1.0
+}

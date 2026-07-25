@@ -10,11 +10,13 @@ import { HistoryAnalyzerService } from '../src/tools/history-analyzer.tool.js';
 import { ModelRecommenderService } from '../src/tools/model-recommender.tool.js';
 import { TokenEstimatorService } from '../src/tools/token-estimator.tool.js';
 
+const modelRecommender = new ModelRecommenderService();
+
 const pipeline = new PipelineService(
   new TokenEstimatorService(),
   new ComplexityClassifierService(),
-  new ModelRecommenderService(),
-  new HistoryAnalyzerService(),
+  modelRecommender,
+  new HistoryAnalyzerService(modelRecommender),
   new PromptRewriterService(),
   new MetaSynthesizerService(),
 );

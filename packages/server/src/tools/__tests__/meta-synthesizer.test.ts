@@ -111,7 +111,7 @@ describe('PipelineService integration', () => {
     new TokenEstimatorService(),
     new ComplexityClassifierService(),
     new ModelRecommenderService(),
-    new HistoryAnalyzerService(),
+    new HistoryAnalyzerService(new ModelRecommenderService()),
     new PromptRewriterService(),
     new MetaSynthesizerService(),
   );
@@ -142,7 +142,7 @@ describe('PipelineService integration', () => {
       } as TokenEstimatorService,
       new ComplexityClassifierService(),
       new ModelRecommenderService(),
-      new HistoryAnalyzerService(),
+      new HistoryAnalyzerService(new ModelRecommenderService()),
       new PromptRewriterService(),
       new MetaSynthesizerService(),
     );

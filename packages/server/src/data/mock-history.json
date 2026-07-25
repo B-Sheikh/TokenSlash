@@ -1,0 +1,473 @@
+{
+  "asOf": "2026-07-25T00:00:00.000Z",
+  "users": {
+    "demo-user": {
+      "displayName": "Demo Developer",
+      "entries": [
+        {
+          "promptPreview": "Write a Python function to merge two sorted lists",
+          "tokenCount": 187,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-02T09:14:22.000Z"
+        },
+        {
+          "promptPreview": "Refactor this React component to use hooks instead of class",
+          "tokenCount": 412,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-03T14:32:08.000Z"
+        },
+        {
+          "promptPreview": "Summarize the quarterly earnings report in 5 bullet points",
+          "tokenCount": 96,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-04T11:07:41.000Z"
+        },
+        {
+          "promptPreview": "Debug this TypeScript error: Property 'map' does not exist",
+          "tokenCount": 263,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-05T16:48:19.000Z"
+        },
+        {
+          "promptPreview": "What is the capital of France?",
+          "tokenCount": 12,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-06T08:22:55.000Z"
+        },
+        {
+          "promptPreview": "Explain REST vs GraphQL for a junior developer",
+          "tokenCount": 54,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-07T13:19:03.000Z"
+        },
+        {
+          "promptPreview": "Generate unit tests for the auth middleware module",
+          "tokenCount": 328,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-08T10:44:37.000Z"
+        },
+        {
+          "promptPreview": "Summarize this 3-page product requirements doc",
+          "tokenCount": 1247,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-09T15:31:12.000Z"
+        },
+        {
+          "promptPreview": "Write a SQL query to find duplicate email addresses",
+          "tokenCount": 143,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-10T09:58:26.000Z"
+        },
+        {
+          "promptPreview": "Create a creative tagline for our AI cost optimization tool",
+          "tokenCount": 38,
+          "modelUsed": "gpt-4o",
+          "taskType": "creative-writing",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-11T17:02:44.000Z"
+        },
+        {
+          "promptPreview": "Analyze this CSV sales data and identify top-performing regions",
+          "tokenCount": 891,
+          "modelUsed": "gpt-4o",
+          "taskType": "data-analysis",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-12T12:15:09.000Z"
+        },
+        {
+          "promptPreview": "Implement binary search in JavaScript with edge case handling",
+          "tokenCount": 276,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-14T08:37:51.000Z"
+        },
+        {
+          "promptPreview": "TL;DR this meeting transcript",
+          "tokenCount": 2134,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-15T14:28:33.000Z"
+        },
+        {
+          "promptPreview": "How do I configure CORS in Express?",
+          "tokenCount": 19,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-16T11:42:17.000Z"
+        },
+        {
+          "promptPreview": "Review this pull request for security issues",
+          "tokenCount": 1567,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "complex",
+          "timestamp": "2026-07-17T16:09:58.000Z"
+        },
+        {
+          "promptPreview": "Write a haiku about cloud computing",
+          "tokenCount": 14,
+          "modelUsed": "gpt-4o",
+          "taskType": "creative-writing",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-18T09:23:44.000Z"
+        },
+        {
+          "promptPreview": "Convert this JSON schema to TypeScript interfaces",
+          "tokenCount": 534,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-19T13:56:02.000Z"
+        },
+        {
+          "promptPreview": "Summarize customer feedback from last week",
+          "tokenCount": 678,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-20T10:11:29.000Z"
+        },
+        {
+          "promptPreview": "Explain the difference between let, const, and var",
+          "tokenCount": 22,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-21T15:47:13.000Z"
+        },
+        {
+          "promptPreview": "Build a rate limiter middleware for our API gateway",
+          "tokenCount": 445,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-22T08:34:56.000Z"
+        },
+        {
+          "promptPreview": "Draft an email announcing our product launch",
+          "tokenCount": 67,
+          "modelUsed": "gpt-4o",
+          "taskType": "creative-writing",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-23T12:08:38.000Z"
+        },
+        {
+          "promptPreview": "Optimize this database query that's running slow",
+          "tokenCount": 723,
+          "modelUsed": "gpt-4o",
+          "taskType": "code-generation",
+          "complexityScore": "complex",
+          "timestamp": "2026-07-24T17:21:07.000Z"
+        }
+      ]
+    },
+    "power-user": {
+      "displayName": "Power User",
+      "entries": [
+        {
+          "promptPreview": "Summarize daily standup notes for the engineering team",
+          "tokenCount": 834,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-01T09:00:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize Slack thread about deployment pipeline",
+          "tokenCount": 1123,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-01T14:30:00.000Z"
+        },
+        {
+          "promptPreview": "Quick answer: best practices for JWT refresh tokens",
+          "tokenCount": 28,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-02T08:15:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize competitor analysis document",
+          "tokenCount": 2456,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-02T16:45:00.000Z"
+        },
+        {
+          "promptPreview": "Explain microservices vs monolith for stakeholders",
+          "tokenCount": 89,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-03T10:20:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize user interview transcripts batch 1",
+          "tokenCount": 3891,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "complex",
+          "timestamp": "2026-07-04T11:00:00.000Z"
+        },
+        {
+          "promptPreview": "What does this error code mean in AWS Lambda?",
+          "tokenCount": 45,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-05T09:30:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize legal review comments on ToS update",
+          "tokenCount": 1678,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-06T15:10:00.000Z"
+        },
+        {
+          "promptPreview": "Brief overview of Q2 marketing campaign results",
+          "tokenCount": 567,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-07T13:25:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize vendor comparison spreadsheet",
+          "tokenCount": 934,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-08T10:40:00.000Z"
+        },
+        {
+          "promptPreview": "Is Kubernetes overkill for our startup?",
+          "tokenCount": 31,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-09T08:55:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize board meeting minutes",
+          "tokenCount": 2789,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-10T17:00:00.000Z"
+        },
+        {
+          "promptPreview": "Key points from customer success weekly report",
+          "tokenCount": 445,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-11T12:15:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize product roadmap feedback session",
+          "tokenCount": 1567,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-12T14:30:00.000Z"
+        },
+        {
+          "promptPreview": "Define SLA terms for enterprise customers",
+          "tokenCount": 112,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-13T09:45:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize incident postmortem document",
+          "tokenCount": 1890,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-14T16:20:00.000Z"
+        },
+        {
+          "promptPreview": "Compare pricing tiers for our SaaS product",
+          "tokenCount": 234,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-15T11:05:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize engineering all-hands presentation",
+          "tokenCount": 2134,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-16T15:50:00.000Z"
+        },
+        {
+          "promptPreview": "Executive summary of market research findings",
+          "tokenCount": 3456,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "complex",
+          "timestamp": "2026-07-17T10:30:00.000Z"
+        },
+        {
+          "promptPreview": "What is zero-trust architecture in simple terms?",
+          "tokenCount": 24,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-18T08:40:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize weekly sales pipeline update",
+          "tokenCount": 789,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-19T13:15:00.000Z"
+        },
+        {
+          "promptPreview": "Recap of design review for mobile app v2",
+          "tokenCount": 1234,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-20T16:00:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize HR policy changes for managers",
+          "tokenCount": 678,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-21T09:25:00.000Z"
+        },
+        {
+          "promptPreview": "Digest of industry news articles this week",
+          "tokenCount": 2567,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-22T14:45:00.000Z"
+        },
+        {
+          "promptPreview": "How should we structure our OKRs for Q3?",
+          "tokenCount": 56,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-23T11:30:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize support ticket trends from Zendesk export",
+          "tokenCount": 1456,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-24T15:20:00.000Z"
+        }
+      ]
+    },
+    "startup-founder": {
+      "displayName": "Startup Founder",
+      "entries": [
+        {
+          "promptPreview": "Write a pitch deck outline for our AI startup",
+          "tokenCount": 234,
+          "modelUsed": "gpt-4o",
+          "taskType": "creative-writing",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-05T10:00:00.000Z"
+        },
+        {
+          "promptPreview": "Prove step by step why our unit economics work at scale",
+          "tokenCount": 567,
+          "modelUsed": "gpt-4o",
+          "taskType": "reasoning",
+          "complexityScore": "complex",
+          "timestamp": "2026-07-08T14:30:00.000Z"
+        },
+        {
+          "promptPreview": "Summarize investor feedback from last demo day",
+          "tokenCount": 890,
+          "modelUsed": "gpt-4o",
+          "taskType": "summarization",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-12T11:15:00.000Z"
+        },
+        {
+          "promptPreview": "Analyze our burn rate spreadsheet and flag risks",
+          "tokenCount": 1234,
+          "modelUsed": "gpt-4o",
+          "taskType": "data-analysis",
+          "complexityScore": "moderate",
+          "timestamp": "2026-07-15T16:45:00.000Z"
+        },
+        {
+          "promptPreview": "Draft cold outreach email to potential angel investors",
+          "tokenCount": 145,
+          "modelUsed": "gpt-4o",
+          "taskType": "creative-writing",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-18T09:30:00.000Z"
+        },
+        {
+          "promptPreview": "What are the key terms in a SAFE agreement?",
+          "tokenCount": 34,
+          "modelUsed": "gpt-4o",
+          "taskType": "general-qa",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-20T13:00:00.000Z"
+        },
+        {
+          "promptPreview": "Derive our TAM SAM SOM from market research data",
+          "tokenCount": 789,
+          "modelUsed": "gpt-4o",
+          "taskType": "reasoning",
+          "complexityScore": "complex",
+          "timestamp": "2026-07-22T10:20:00.000Z"
+        },
+        {
+          "promptPreview": "Write landing page copy for our beta launch",
+          "tokenCount": 198,
+          "modelUsed": "gpt-4o",
+          "taskType": "creative-writing",
+          "complexityScore": "simple",
+          "timestamp": "2026-07-24T15:40:00.000Z"
+        }
+      ]
+    }
+  },
+  "defaultProfile": {
+    "monthlyPromptVolume": 75,
+    "dominantTaskTypes": ["general-qa", "summarization"],
+    "typicalModel": "gpt-4o"
+  }
+}
