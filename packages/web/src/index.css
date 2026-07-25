@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Dark workspace surfaces */
+  --color-ink: #f2f3f5;
+  --color-ink-muted: #8b919c;
+  --color-paper: #0d0f14;
+  --color-paper-elevated: #161a22;
+  --color-sidebar: #0a0c10;
+  --color-line: #2a303c;
+  --color-line-strong: #3a4252;
+  --color-accent: #2ee6a6;
+  --color-accent-bright: #5ef0bc;
+  --color-accent-soft: rgba(46, 230, 166, 0.12);
+  --color-warn: #e8b86d;
+  --color-warn-soft: rgba(232, 184, 109, 0.12);
+  --color-danger: #e07a6a;
+  --color-savings: #2ee6a6;
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 0 0 1px rgba(46, 230, 166, 0.2), 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 24px rgba(46, 230, 166, 0.15);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(46, 230, 166, 0.07), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(80, 120, 255, 0.04), transparent 50%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button,
+  textarea,
+  input {
+    font: inherit;
+  }
+
+  ::selection {
+    background: rgba(46, 230, 166, 0.25);
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  .card {
+    background-color: var(--color-paper-elevated);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  .transition-ui {
+    transition:
+      color 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease,
+      opacity 180ms ease,
+      width 200ms ease,
+      padding 200ms ease;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes mic-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 230, 166, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(46, 230, 166, 0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out both;
+}
+
+.animate-fade-up-delay {
+  animation: fade-up 0.45s ease-out 0.07s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.5s ease-out 0.14s both;
+}
+
+.animate-spin-slow {
+  animation: spin 0.85s linear infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.4s ease-in-out infinite;
+}
+
+.animate-mic-pulse {
+  animation: mic-pulse 1.2s ease-out infinite;
+}

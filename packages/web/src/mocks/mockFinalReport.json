@@ -1,0 +1,26 @@
+{
+  "originalPrompt": "You are a helpful assistant. Please carefully read the following customer support ticket and provide a detailed, comprehensive response that addresses all of their concerns. Make sure to be polite and professional. The ticket is: My order #4521 hasn't arrived and it's been two weeks. I paid for express shipping. Can you check the status and also tell me about refund options if it's lost?",
+  "optimizedPrompt": "Support ticket #4521: order not arrived after 2 weeks; customer paid express shipping. Reply professionally with: (1) current shipment status, (2) refund options if lost.",
+  "tokenSavingsPercent": 62,
+  "recommendedModel": "gpt-4o-mini",
+  "recommendedModelReasoning": "This is a structured support reply with clear constraints — a smaller model matches quality at a fraction of the cost. Token compression further cuts input spend.",
+  "costComparison": {
+    "current": {
+      "model": "gpt-4o",
+      "perRequestUsd": 0.0048,
+      "monthlyUsd": 144.0,
+      "inputTokens": 186,
+      "outputTokens": 220
+    },
+    "recommended": {
+      "model": "gpt-4o-mini",
+      "perRequestUsd": 0.00042,
+      "monthlyUsd": 12.6,
+      "inputTokens": 71,
+      "outputTokens": 180
+    }
+  },
+  "monthlySavingsEstimateUsd": 131.4,
+  "assumedMonthlyRequests": 30000,
+  "currentModel": "gpt-4o"
+}
