@@ -1,19 +1,25 @@
-## Description
-<!-- Provide a brief summary of the changes in this PR and which pipeline module(s) are affected. -->
+## 📌 PR Summary
+<!-- Briefly describe what this PR accomplishes. Mention if this touches frontend UI, backend MCP tools, or shared contracts. -->
+- **Component / Area**: `[e.g., packages/web, packages/server]`
+- **Key Changes**:
 
-## Assigned Role / Module Owned
-- [ ] Member A — Signal Extraction Lead (`token-estimator`, `complexity-classifier`, `taxonomy`)
-- [ ] Member B — Economics Lead (`model-recommender`, `history-analyzer`, `pricing-table.json`, `mock-history.json`)
-- [ ] Member C — Orchestration Lead (`prompt-rewriter`, `meta-synthesizer`, `app.module.ts`, `types.ts`)
-- [ ] Member D — Experience & Delivery Lead (`packages/web/**`, `.github/`, `README.md`, `DEMO.md`)
+---
 
-## Hackathon Checkpoint Checklist
-- [ ] **Contract Compliance**: Does NOT modify `packages/server/src/shared/types.ts` without explicit Member C review and team announcement.
-- [ ] **Zero Regressions**: All unit tests pass locally (`npm test`).
-- [ ] **Smoke Test Verified**: Full end-to-end pipeline executes successfully (`npm run smoke`).
-- [ ] **Latency & Performance**: All tool executions return in under ~200ms for standard prompts (no hanging on large strings).
-- [ ] **Error Handling**: No unhandled promise rejections or crashes on empty string / non-English input; functions degrade gracefully per design.
-- [ ] **Cross-Review Required**: Reviewed by at least one teammate from a different role before merging into `develop`.
+## 🚨 Merge Gatekeeper Checklist (Mandatory before PR approval)
+As the designated gatekeeper for `develop` / `main`, verify the following:
 
-## Notes / Open Issues
-<!-- Mention any mock dependencies swapped or placeholder values remaining. -->
+- [ ] **Zero Backend Contract Drift**: No modifications were made to `packages/server/src/shared/types.ts` or `FinalReport` shape without unanimous team alignment.
+- [ ] **No Console Errors**: Verified in browser DevTools that running `npm run dev` yields zero errors or warnings.
+- [ ] **3-Second Load Budget**: Report rendering and UI state transitions complete in under 3 seconds.
+- [ ] **Graceful Degradation Verified**: Tested against mock data (`mockFinalReport.json`) and verified fallback behavior if live MCP API is unreachable.
+- [ ] **Design Token Compliance**: UI changes strictly follow PromptIQ's dark palette (`#0B0F14`, `#161B22`, cyan `#00F2FE` accent) and glassmorphism standards.
+
+---
+
+## 📸 Screenshots / Recordings (For UI PRs)
+<!-- Attach laptop/desktop screenshots of original vs optimized diff view, hero savings card, or cost comparison table. -->
+
+---
+
+## 🔗 Related Issue / Task
+Closes #

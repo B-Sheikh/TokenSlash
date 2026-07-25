@@ -1,14 +1,20 @@
 {
-  "name": "tokenslash",
-  "version": "0.1.0",
-  "private": true,
-  "description": "TokenSlash — MCP-based prompt cost analyzer and optimizer",
-  "workspaces": [
-    "packages/*"
-  ],
+  "name": "promptiq-server",
+  "version": "1.0.0",
+  "description": "PromptIQ MCP Server Tools - Model Recommender & History Analyzer with Satisfaction ML Model",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "npm run dev -w @tokenslash/server",
-    "build": "npm run build -w @tokenslash/server",
-    "test": "npm run test -w @tokenslash/server"
+    "build": "tsc",
+    "test": "vitest run",
+    "train:ml": "python packages/server/src/ml/train_satisfaction.py",
+    "start:server": "tsc && node dist/api_server.js"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.2",
+    "vitest": "^1.6.0"
   }
 }

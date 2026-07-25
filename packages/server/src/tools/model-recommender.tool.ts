@@ -1,175 +1,164 @@
-import { Injectable } from '@nitrostack/core';
-import type {
-  ComplexityScore,
-  ModelRecommendation,
-  TaskType,
-} from '../shared/types.js';
-import { DEFAULT_CURRENT_MODEL } from '../shared/types.js';
-import type { ModelTier } from '../lib/taxonomy.js';
-import {
-  COMPLEXITY_TIER_MAP,
-  TASK_TYPE_MIN_TIER,
-} from '../lib/taxonomy.js';
-import { loadJsonData } from '../lib/load-data.js';
+import { z } from 'zod';
+import fs from 'fs';
+import path from 'path';
+import { CapabilityTier, ModelPricing, ModelRecommendationResult, TokenCount } from '../shared/types.js';
 
-type ModelPricing = {
-  inputPer1M: number;
-  outputPer1M: number;
-  tier: ModelTier;
-  contextWindow: number;
-};
-
-type PricingTable = {
-  asOf: string;
-  defaultCurrentModel: string;
-  outputTokenRatio: number;
-  providers: Record<
-    string,
-    {
-      source: string;
-      models: Record<string, ModelPricing>;
-    }
-  >;
-};
-
-const TIER_ORDER: Record<ModelTier, number> = {
-  budget: 0,
-  standard: 1,
-  premium: 2,
-  reasoning: 3,
-};
-
-function loadPricingTable(): PricingTable {
-  return loadJsonData<PricingTable>('pricing-table.json');
-}
-
-function flattenModels(
-  table: PricingTable,
-): Array<{ id: string; pricing: ModelPricing }> {
-  const models: Array<{ id: string; pricing: ModelPricing }> = [];
-  for (const provider of Object.values(table.providers)) {
-    for (const [id, pricing] of Object.entries(provider.models)) {
-      models.push({ id, pricing });
+function loadPricingTable() {
+  const possiblePaths = [
+    path.resolve(process.cwd(), 'packages/server/src/data/pricing-table.json'),
+    path.resolve(__dirname, '../data/pricing-table.json'),
+    path.resolve(__dirname, '../../src/data/pricing-table.json')
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return JSON.parse(fs.readFileSync(p, 'utf8'));
     }
   }
-  return models;
+  throw new Error('pricing-table.json could not be located');
 }
 
-@Injectable()
-export class ModelRecommenderService {
-  private readonly pricingTable: PricingTable;
-  private readonly allModels: Array<{ id: string; pricing: ModelPricing }>;
+const pricingTable = loadPricingTable();
 
-  constructor() {
-    this.pricingTable = loadPricingTable();
-    this.allModels = flattenModels(this.pricingTable);
-  }
+// Zod Schema for Tool Parameters
+export const recommendModelSchema = z.object({
+  tokenCount: z.object({
+    inputTokens: z.number().nonnegative(),
+    outputTokens: z.number().nonnegative(),
+    totalTokens: z.number().optional()
+  }),
+  complexityScore: z.number().min(1).max(10),
+  taskType: z.string(),
+  currentModel: z.string().optional()
+});
 
-  /**
-   * Recommends the cheapest model that meets complexity and task-type requirements.
-   * Costs are computed from the static pricing table (as of build date).
-   */
-  recommendModel(
-    tokenCount: number,
-    complexityScore: ComplexityScore,
-    taskType: TaskType,
-  ): ModelRecommendation {
-    const safeTokenCount = Number.isFinite(tokenCount) && tokenCount >= 0 ? tokenCount : 0;
-    const currentModel = this.pricingTable.defaultCurrentModel ?? DEFAULT_CURRENT_MODEL;
-    const minTier = this.resolveMinimumTier(complexityScore, taskType);
+export type RecommendModelInput = z.infer<typeof recommendModelSchema>;
 
-    const eligible = this.allModels.filter(
-      (m) => TIER_ORDER[m.pricing.tier] >= TIER_ORDER[minTier],
-    );
+// NitroStack @Tool decorator stub for MCP registration
+export function Tool(metadata: { name: string; description: string; schema: z.ZodSchema }) {
+  return function (_target: object, _propertyKey?: string, descriptor?: PropertyDescriptor) {
+    return descriptor;
+  };
+}
 
-    const recommended =
-      eligible.length > 0
-        ? eligible.reduce((cheapest, candidate) =>
-            this.estimateRequestCost(candidate.id, safeTokenCount) <
-            this.estimateRequestCost(cheapest.id, safeTokenCount)
-              ? candidate
-              : cheapest,
-          )
-        : this.allModels.find((m) => m.id === currentModel) ?? this.allModels[0];
+export class ModelRecommenderTool {
+  @Tool({
+    name: 'recommendModel',
+    description: 'Recommends the most cost-effective AI model based on token count, prompt complexity, and task type using real live pricing data.',
+    schema: recommendModelSchema
+  })
+  public recommendModel(
+    tokenCountInput: TokenCount | { inputTokens: number; outputTokens: number },
+    complexityScore: number,
+    taskType: string,
+    currentModelName: string = 'gpt-4o'
+  ): ModelRecommendationResult {
+    // Input sanitization & guards against negative/NaN
+    const inputTokens = Math.max(0, isNaN(tokenCountInput?.inputTokens) ? 0 : tokenCountInput.inputTokens);
+    const outputTokens = Math.max(0, isNaN(tokenCountInput?.outputTokens) ? 0 : tokenCountInput.outputTokens);
+    const safeComplexity = Math.max(1, Math.min(10, isNaN(complexityScore) ? 5 : complexityScore));
+    const safeTaskType = taskType || 'general';
 
-    const currentCost = this.estimateRequestCost(currentModel, safeTokenCount);
-    const recommendedCost = this.estimateRequestCost(recommended.id, safeTokenCount);
+    // Determine minimum capability tier required
+    const requiredTier = this.determineRequiredTier(safeComplexity, safeTaskType);
 
-    const savingsPercent =
-      currentCost > 0
-        ? Math.max(
-            0,
-            Math.round(((currentCost - recommendedCost) / currentCost) * 100),
-          )
-        : 0;
+    // Compute cost function
+    const calculateCost = (model: ModelPricing): number => {
+      const inputCost = (inputTokens / 1_000_000) * model.inputCostPerM;
+      const outputCost = (outputTokens / 1_000_000) * model.outputCostPerM;
+      const total = inputCost + outputCost;
+      return isNaN(total) || total < 0 ? 0 : Number(total.toFixed(6));
+    };
 
-    const reasoning = this.buildReasoning(
-      complexityScore,
-      taskType,
-      minTier,
-      currentModel,
-      recommended.id,
-      savingsPercent,
-    );
+    const allModels: ModelPricing[] = pricingTable.models as ModelPricing[];
+
+    // Find current model entry or default
+    const currentModelEntry = allModels.find(
+      (m) => m.model.toLowerCase() === currentModelName.toLowerCase()
+    ) || allModels.find((m) => m.model === 'gpt-4o') || allModels[0];
+
+    const currentModelCost = calculateCost(currentModelEntry);
+
+    // Filter models capable of handling the required tier
+    const eligibleTiers: CapabilityTier[] = this.getEligibleTiers(requiredTier);
+    const capableModels = allModels.filter((m) => eligibleTiers.includes(m.tier));
+
+    if (capableModels.length === 0) {
+      return {
+        recommendedModel: currentModelEntry.model,
+        currentModelCost,
+        recommendedModelCost: currentModelCost,
+        savingsPercent: 0,
+        reasoning: `No lower-cost model available for complexity score ${safeComplexity} (${requiredTier} tier). Recommending ${currentModelEntry.model}.`
+      };
+    }
+
+    // Sort capable models by total cost (ascending)
+    capableModels.sort((a, b) => calculateCost(a) - calculateCost(b));
+    const cheapestCapableModel = capableModels[0];
+    const recommendedModelCost = calculateCost(cheapestCapableModel);
+
+    // If recommended model is not cheaper than current, maintain current model & return 0% savings
+    if (recommendedModelCost >= currentModelCost) {
+      return {
+        recommendedModel: currentModelEntry.model,
+        currentModelCost,
+        recommendedModelCost: currentModelCost,
+        savingsPercent: 0,
+        reasoning: `Current model (${currentModelEntry.model}) is already optimal for complexity tier '${requiredTier}' (score: ${safeComplexity}).`
+      };
+    }
+
+    const rawSavings = currentModelCost - recommendedModelCost;
+    const savingsPercent = currentModelCost > 0
+      ? Math.max(0, Math.min(100, Number(((rawSavings / currentModelCost) * 100).toFixed(2))))
+      : 0;
 
     return {
-      recommendedModel: recommended.id,
-      currentModelCost: currentCost,
-      recommendedModelCost: recommendedCost,
+      recommendedModel: cheapestCapableModel.model,
+      currentModelCost,
+      recommendedModelCost,
       savingsPercent,
-      reasoning,
+      reasoning: `Recommended ${cheapestCapableModel.model} (${cheapestCapableModel.provider}) for complexity tier '${requiredTier}' (score: ${safeComplexity}, task: ${safeTaskType}). Projected savings: ${savingsPercent}% compared to ${currentModelEntry.model}.`
     };
   }
 
-  /** Exposed for History Analyzer to project savings on past entries. */
-  estimateRequestCost(modelId: string, tokenCount: number): number {
-    const model = this.allModels.find((m) => m.id === modelId);
-    if (!model || tokenCount <= 0) return 0;
-
-    const inputCost = (tokenCount / 1_000_000) * model.pricing.inputPer1M;
-    const outputTokens = tokenCount * this.pricingTable.outputTokenRatio;
-    const outputCost = (outputTokens / 1_000_000) * model.pricing.outputPer1M;
-    const total = inputCost + outputCost;
-
-    return Number(Math.max(0, total).toFixed(6));
-  }
-
-  getPricingAsOf(): string {
-    return this.pricingTable.asOf;
-  }
-
-  private resolveMinimumTier(
-    complexityScore: ComplexityScore,
-    taskType: TaskType,
-  ): ModelTier {
-    const fromComplexity = COMPLEXITY_TIER_MAP[complexityScore];
-    const fromTask = TASK_TYPE_MIN_TIER[taskType];
-
-    if (!fromTask) return fromComplexity;
-    return TIER_ORDER[fromTask] > TIER_ORDER[fromComplexity]
-      ? fromTask
-      : fromComplexity;
-  }
-
-  private buildReasoning(
-    complexityScore: ComplexityScore,
-    taskType: TaskType,
-    minTier: ModelTier,
-    currentModel: string,
-    recommendedModel: string,
-    savingsPercent: number,
-  ): string {
-    if (recommendedModel === currentModel || savingsPercent === 0) {
-      return (
-        `${complexityScore} ${taskType} task requires ${minTier}-tier capability. ` +
-        `${currentModel} is already the optimal choice for this workload.`
-      );
+  private determineRequiredTier(complexityScore: number, taskType: string): CapabilityTier {
+    const isReasoningTask = ['reasoning', 'complex_reasoning', 'formal_proof', 'math_proof'].includes(taskType.toLowerCase());
+    if (isReasoningTask || complexityScore >= 9) {
+      return 'reasoning';
     }
-
-    return (
-      `${complexityScore} ${taskType} task needs at least ${minTier}-tier models. ` +
-      `Switching from ${currentModel} to ${recommendedModel} saves ~${savingsPercent}% per request ` +
-      `(pricing as of ${this.pricingTable.asOf.slice(0, 10)}).`
-    );
+    if (complexityScore >= 7) {
+      return 'advanced';
+    }
+    if (complexityScore >= 4) {
+      return 'standard';
+    }
+    return 'light';
   }
+
+  private getEligibleTiers(requiredTier: CapabilityTier): CapabilityTier[] {
+    switch (requiredTier) {
+      case 'light':
+        return ['light', 'standard', 'advanced', 'reasoning'];
+      case 'standard':
+        return ['standard', 'advanced', 'reasoning'];
+      case 'advanced':
+        return ['advanced', 'reasoning'];
+      case 'reasoning':
+        return ['reasoning'];
+      default:
+        return ['standard', 'advanced'];
+    }
+  }
+}
+
+// Standalone function export matching expected prompt signature: recommendModel(tokenCount, complexityScore, taskType)
+const recommenderInstance = new ModelRecommenderTool();
+export function recommendModel(
+  tokenCount: TokenCount | { inputTokens: number; outputTokens: number },
+  complexityScore: number,
+  taskType: string,
+  currentModel?: string
+): ModelRecommendationResult {
+  return recommenderInstance.recommendModel(tokenCount, complexityScore, taskType, currentModel);
 }

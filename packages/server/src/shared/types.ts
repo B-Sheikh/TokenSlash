@@ -1,36 +1,51 @@
-/**
- * TokenSlash shared type contract.
- * Owned by Member C (Integration Lead). Treat as near-frozen after H0:30 —
- * additive changes only (optional fields), never rename or remove without team notice.
- */
+export type CapabilityTier = 'light' | 'standard' | 'advanced' | 'reasoning';
 
-/** Supported complexity tiers from the Complexity Classifier. */
-export type ComplexityScore = 'simple' | 'moderate' | 'complex';
-
-/** Fixed task-type taxonomy — Member A implements classification against this set. */
-export type TaskType =
-  | 'summarization'
-  | 'code-generation'
-  | 'creative-writing'
-  | 'data-analysis'
-  | 'general-qa'
-  | 'reasoning';
-
-/** Module 1 — Token Estimator output. */
-export interface TokenEstimate {
-  tokenCount: number;
-  tokenizerUsed: string;
+export interface TokenCount {
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens?: number;
 }
 
-/** Module 2 — Complexity Classifier output. */
-export interface ComplexityResult {
-  complexityScore: ComplexityScore;
-  taskType: TaskType;
+export interface ComplexityClassification {
+  complexityScore: number; // Scale 1 - 10
+  taskType: string; // e.g. "summarization", "code_generation", "reasoning", "creative_writing"
   reasoning: string;
+  minimumCapableTier: CapabilityTier;
 }
 
-/** Module 3 — Model Recommender output. */
-export interface ModelRecommendation {
+export interface ModelPricing {
+  provider: string;
+  model: string;
+  tier: CapabilityTier;
+  inputCostPerM: number; // Cost in USD per 1M input tokens
+  outputCostPerM: number; // Cost in USD per 1M output tokens
+  maxContextTokens?: number;
+  source: string;
+}
+
+export interface PricingTableData {
+  asOf: string;
+  sources: Record<string, string>;
+  models: ModelPricing[];
+}
+
+export interface PromptHistoryEntry {
+  id: string;
+  userId: string;
+  timestamp: string;
+  promptText: string;
+  inputTokens: number;
+  outputTokens: number;
+  modelUsed: string;
+  complexityScore: number;
+  taskType: string;
+  retriesCount: number;
+  userSatisfied: boolean;
+  timeToSatisfactionSeconds: number;
+  cost: number;
+}
+
+export interface ModelRecommendationResult {
   recommendedModel: string;
   currentModelCost: number;
   recommendedModelCost: number;
@@ -38,118 +53,30 @@ export interface ModelRecommendation {
   reasoning: string;
 }
 
-/** Module 4 — History Analyzer output. */
-export interface HistoryInsight {
+export interface SatisfactionMetrics {
+  avgSatisfactionRate: number;
+  avgTimeToSatisfactionSec: number;
+  satisfactionScore: number;
+  recommendedAdjustment: string;
+}
+
+export interface HistoryAnalyzerResult {
   monthlyPromptVolume: number;
   projectedMonthlySavings: number;
   userPatternSummary: string;
+  satisfactionMetrics?: SatisfactionMetrics;
 }
 
-/** Module 5 — Prompt Rewriter output. */
-export interface RewriteResult {
-  optimizedPrompt: string;
-  tokenSavingsPercent: number;
+export interface SatisfactionModelWeights {
+  intercept: number;
+  featureWeights: {
+    complexityScore: number;
+    tokenVolume: number;
+    tierMismatch: number;
+    retryCountPenalty: number;
+  };
+  accuracy: number;
+  precision: number;
+  recall: number;
+  trainedAt: string;
 }
-
-/** Cost breakdown rendered in the dashboard. */
-export interface CostComparison {
-  currentModel: string;
-  recommendedModel: string;
-  currentCostPerRequest: number;
-  recommendedCostPerRequest: number;
-  currentMonthlyCost: number;
-  recommendedMonthlyCost: number;
-  savingsPercent: number;
-}
-
-/** Tracks which pipeline modules succeeded vs. degraded. */
-export interface ModuleAvailability {
-  tokenEstimate: boolean;
-  complexity: boolean;
-  modelRecommendation: boolean;
-  history: boolean;
-  rewrite: boolean;
-}
-
-/** Per-module errors keyed by module name (only present when a module failed). */
-export type ModuleErrors = Partial<
-  Record<
-    | 'tokenEstimate'
-    | 'complexity'
-    | 'modelRecommendation'
-    | 'history'
-    | 'rewrite'
-    | 'synthesis',
-    string
-  >
->;
-
-/** Module 6 — Meta-Synthesizer output (the object the dashboard renders). */
-export interface FinalReport {
-  originalPrompt: string;
-  optimizedPrompt: string;
-  tokenSavingsPercent: number;
-  recommendedModel: string;
-  costComparison: CostComparison;
-  monthlySavings: number;
-  tokenCount: number;
-  complexityScore: ComplexityScore;
-  taskType: TaskType;
-  modelRecommendationReasoning: string;
-  userPatternSummary: string;
-  monthlyPromptVolume: number;
-  availability: ModuleAvailability;
-  errors: ModuleErrors;
-  generatedAt: string;
-}
-
-/** Top-level orchestration input. */
-export interface OrchestrationInput {
-  prompt: string;
-  userId: string;
-}
-
-/** Top-level orchestration output. */
-export interface OrchestrationOutput {
-  finalReport: FinalReport;
-}
-
-/** Inputs passed to Meta-Synthesizer from upstream module results. */
-export interface SynthesisInput {
-  originalPrompt: string;
-  tokenEstimate: ModuleResult<TokenEstimate>;
-  complexity: ModuleResult<ComplexityResult>;
-  modelRecommendation: ModuleResult<ModelRecommendation>;
-  history: ModuleResult<HistoryInsight>;
-  rewrite: ModuleResult<RewriteResult>;
-}
-
-/** Wrapper for graceful per-module degradation in the orchestrator. */
-export interface ModuleResult<T> {
-  ok: boolean;
-  data?: T;
-  error?: string;
-}
-
-/** Default assumption for "current model" when History Analyzer has no signal. */
-export const DEFAULT_CURRENT_MODEL = 'gpt-4o';
-
-/** Default mock user when no userId is supplied. */
-export const DEFAULT_USER_ID = 'demo-user';
-
-/** All valid task types — used for Zod enums in tool schemas. */
-export const TASK_TYPES: readonly TaskType[] = [
-  'summarization',
-  'code-generation',
-  'creative-writing',
-  'data-analysis',
-  'general-qa',
-  'reasoning',
-] as const;
-
-/** All valid complexity scores. */
-export const COMPLEXITY_SCORES: readonly ComplexityScore[] = [
-  'simple',
-  'moderate',
-  'complex',
-] as const;

@@ -1,0 +1,107 @@
+{
+  "evaluationSummary": "PromptIQ 3-Model Intelligence Suite Performance Report",
+  "sampleCount": 1247,
+  "featureCount": 80,
+  "targetModels": {
+    "model1_satisfaction": {
+      "algorithm": "XGBoost",
+      "valMetrics": {
+        "mae": 0.0529,
+        "rmse": 0.1209,
+        "r2": 1.0
+      },
+      "testMetrics": {
+        "mae": 0.1118,
+        "rmse": 0.5744,
+        "r2": 0.9994
+      }
+    },
+    "model2_retries": {
+      "algorithm": "RandomForest",
+      "valMetrics": {
+        "mae": 0.0,
+        "rmse": 0.0,
+        "r2": 1.0
+      },
+      "testMetrics": {
+        "mae": 0.0,
+        "rmse": 0.0,
+        "r2": 1.0
+      }
+    },
+    "model3_latency": {
+      "algorithm": "LightGBM",
+      "valMetrics": {
+        "mae": 0.1732,
+        "rmse": 0.2232,
+        "r2": 0.9836
+      },
+      "testMetrics": {
+        "mae": 0.1828,
+        "rmse": 0.2261,
+        "r2": 0.9816
+      }
+    }
+  },
+  "topFeatureImportances": {
+    "Model 1 (Satisfaction)": {
+      "acceptanceRate": 0.97841,
+      "userSatIndex": 0.02136,
+      "avgRetries": 0.00024,
+      "charCount": 0.0,
+      "wordCount": 0.0,
+      "sentenceCount": 0.0,
+      "estTokens": 0.0,
+      "complexityScore": 0.0,
+      "codeDensity": 0.0,
+      "reasoningDensity": 0.0,
+      "mathDensity": 0.0,
+      "researchDensity": 0.0,
+      "summarizationDensity": 0.0,
+      "translationDensity": 0.0,
+      "creativeDensity": 0.0
+    },
+    "Model 2 (Retries)": {
+      "avgRetries": 1.0,
+      "charCount": 0.0,
+      "wordCount": 0.0,
+      "sentenceCount": 0.0,
+      "estTokens": 0.0,
+      "complexityScore": 0.0,
+      "codeDensity": 0.0,
+      "reasoningDensity": 0.0,
+      "mathDensity": 0.0,
+      "researchDensity": 0.0,
+      "summarizationDensity": 0.0,
+      "translationDensity": 0.0,
+      "creativeDensity": 0.0,
+      "isJsonRequest": 0.0,
+      "isTableRequest": 0.0
+    },
+    "Model 3 (Latency)": {
+      "wordCount": 598.0,
+      "charCount": 442.0,
+      "userSatIndex": 237.0,
+      "inputCostPerM": 224.0,
+      "baseLatency": 197.0,
+      "mathDensity": 186.0,
+      "sentenceCount": 166.0,
+      "complexityScore": 69.0,
+      "userCodeRatio": 61.0,
+      "contextWindow": 40.0,
+      "reasoningDensity": 39.0,
+      "avgComplexity": 28.0,
+      "codeDensity": 25.0,
+      "isToolUsage": 19.0,
+      "creativeDensity": 16.0
+    }
+  },
+  "calibration": {
+    "confidenceThreshold": 0.85,
+    "satisfactionMinMax": [
+      0,
+      100
+    ],
+    "maxRetriesCap": 4
+  }
+}

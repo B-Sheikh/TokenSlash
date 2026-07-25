@@ -1,209 +1,359 @@
-import React, { useState } from 'react';
-import { Sparkles, Play, Terminal, FileText, Database } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { 
+  Sparkles, 
+  Upload, 
+  Trash2, 
+  FileText, 
+  Image as ImageIcon, 
+  FileCode, 
+  FileSpreadsheet, 
+  File, 
+  Clipboard, 
+  RotateCcw, 
+  Zap, 
+  History as HistoryIcon, 
+  Download, 
+  AlertCircle, 
+  CheckCircle2,
+  ArrowRight,
+  Terminal
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-interface PromptInputProps {
-  onAnalyze: (promptText: string, userId: string) => void;
-  isLoading: boolean;
-  isDemoMode: boolean;
-  onToggleDemoMode: () => void;
+interface UploadedFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  content: string;
+  previewUrl?: string;
 }
 
-const SAMPLE_PROMPTS = [
-  {
-    title: 'Bloated Code Generation',
-    icon: <Terminal size={16} />,
-    badge: 'Code QA',
-    text: 'Please kindly I would like you to write a Python function that sorts a list in ascending order. Make sure it is clean and handles edge cases properly, thank you so much in advance!',
-  },
-  {
-    title: 'Verbose Data Analysis',
-    icon: <Database size={16} />,
-    badge: 'Analytics',
-    text: 'I have a huge dataset in CSV format with columns: id, name, revenue, and churn_date. Can you please carefully analyze this and give me a complete step-by-step breakdown of how I can calculate monthly churn rate using pandas, without omitting any code details?',
-  },
-  {
-    title: 'Repetitive Summarization',
-    icon: <FileText size={16} />,
-    badge: 'Summary',
-    text: 'Please read the following text very carefully and summarize all the main points in a concise bulleted list format. Make sure not to include any unnecessary filler or extra conversational introductory remarks, just give me the bullet points directly.',
-  },
-];
+interface PromptInputProps {
+  onSubmit: (promptText: string) => void;
+  isLoading: boolean;
+  onClear: () => void;
+  onLoadSample: () => void;
+}
 
-export const PromptInput: React.FC<PromptInputProps> = ({
-  onAnalyze,
-  isLoading,
-  isDemoMode,
-  onToggleDemoMode,
-}) => {
-  const [promptText, setPromptText] = useState(SAMPLE_PROMPTS[0].text);
-  const [userId, setUserId] = useState('demo-user-abhishek');
+export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading, onClear, onLoadSample }) => {
+  const [prompt, setPrompt] = useState('');
+  const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const estimatedTokens = Math.ceil(promptText.trim().length / 4);
+  // Auto-expand textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 400)}px`;
+    }
+  }, [prompt]);
+
+  // Telemetry metrics
+  const wordCount = prompt.trim() ? prompt.trim().split(/\s+/).length : 0;
+  const charCount = prompt.length;
+  const estimatedTokens = Math.ceil(charCount / 3.8); // Approximately 3.8 chars per token
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPrompt(e.target.value);
+    if (errorMessage) setErrorMessage(null);
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        setPrompt((prev) => (prev ? `${prev}\n\n${text}` : text));
+        if (errorMessage) setErrorMessage(null);
+      }
+    } catch (err) {
+      console.error('Failed to read clipboard contents: ', err);
+    }
+  };
+
+  const handleFileUpload = (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    if (errorMessage) setErrorMessage(null);
+
+    Array.from(fileList).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string || '';
+        const isImage = file.type.startsWith('image/');
+        const newFile: UploadedFile = {
+          id: `${file.name}-${Date.now()}`,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          content: isImage ? `[Image Reference: ${file.name}]` : content,
+          previewUrl: isImage ? URL.createObjectURL(file) : undefined,
+        };
+
+        setFiles((prev) => [...prev, newFile]);
+        // Append file content to prompt text so it submits cleanly without altering backend contract!
+        if (!isImage && content) {
+          setPrompt((prev) => `${prev ? prev + '\n\n' : ''}=== FILE: ${file.name} ===\n${content.slice(0, 5000)}${content.length > 5000 ? '\n...[truncated]' : ''}`);
+        } else if (isImage) {
+          setPrompt((prev) => `${prev ? prev + '\n\n' : ''}[Attached Image: ${file.name}]`);
+        }
+      };
+
+      if (file.type.startsWith('image/')) {
+        reader.readAsDataURL(file);
+      } else {
+        reader.readAsText(file);
+      }
+    });
+  };
+
+  const removeFile = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!promptText.trim()) return;
-    onAnalyze(promptText, userId);
+    if (!prompt.trim() && files.length === 0) {
+      setErrorMessage('Please enter a prompt or attach a document before running analysis.');
+      return;
+    }
+    setErrorMessage(null);
+    onSubmit(prompt);
+  };
+
+  const handleClearAll = () => {
+    setPrompt('');
+    setFiles([]);
+    setErrorMessage(null);
+    onClear();
+  };
+
+  const getFileIcon = (type: string, name: string) => {
+    if (type.startsWith('image/')) return <ImageIcon className="w-4 h-4 text-purple-400" />;
+    if (name.endsWith('.json') || name.endsWith('.js') || name.endsWith('.ts') || name.endsWith('.md')) {
+      return <FileCode className="w-4 h-4 text-cyan-400" />;
+    }
+    if (name.endsWith('.csv') || name.endsWith('.xls')) {
+      return <FileSpreadsheet className="w-4 h-4 text-emerald-400" />;
+    }
+    return <FileText className="w-4 h-4 text-blue-400" />;
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   return (
-    <div className="glass-card animate-fade-in" style={{ padding: '32px', marginBottom: '32px' }}>
-      {/* Header & Mode Toggle */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4" style={{ marginBottom: '24px' }}>
+    <div className="w-full max-w-5xl mx-auto space-y-6">
+      {/* Title & Badge Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <Sparkles size={22} style={{ color: 'var(--accent-cyan)' }} />
-            <h2 style={{ fontSize: '24px' }}>AI Prompt Optimization Engine</h2>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-mono text-cyan-400 mb-3">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>AI OPTIMIZATION WORKSPACE</span>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '4px' }}>
-            Multi-tool agentic pipeline running Token Estimator, Complexity Classifier, and Recommender in real-time.
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+            Supercharge Your Prompts
+          </h1>
+          <p className="text-slate-400 text-sm mt-1 max-w-2xl">
+            Paste verbose instructions, legacy prompts, or code specs. PromptIQ’s MCP engine eliminates token bloat and maps tasks to the most cost-effective LLM tier in under 3 seconds.
           </p>
         </div>
 
-        <div className="flex items-center gap-3" style={{ background: 'rgba(0,0,0,0.3)', padding: '6px 12px', borderRadius: '999px', border: '1px solid var(--border-subtle)' }}>
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Execution Mode:</span>
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onToggleDemoMode}
-            style={{
-              background: isDemoMode ? 'var(--gradient-hero)' : 'transparent',
-              color: isDemoMode ? '#fff' : 'var(--text-muted)',
-              border: isDemoMode ? 'none' : '1px solid var(--border-subtle)',
-              padding: '4px 10px',
-              borderRadius: '999px',
-              fontSize: '11px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 150ms ease',
-            }}
+            onClick={onLoadSample}
+            className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-2"
           >
-            {isDemoMode ? '⚡ Demo Snapshot' : '🌐 Live Backend Seam'}
+            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            <span>Load Hackathon Demo Prompt</span>
           </button>
         </div>
       </div>
 
-      {/* Sample Prompt Presets */}
-      <div style={{ marginBottom: '20px' }}>
-        <span style={{ fontSize: '12px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
-          Sample War-Room Presets:
-        </span>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3" style={{ marginTop: '8px' }}>
-          {SAMPLE_PROMPTS.map((sample, idx) => (
-            <div
-              key={idx}
-              onClick={() => setPromptText(sample.text)}
-              className="glass-card glass-card-interactive flex flex-col justify-between"
-              style={{ padding: '14px', background: promptText === sample.text ? 'rgba(0, 242, 254, 0.08)' : 'rgba(255, 255, 255, 0.02)', borderColor: promptText === sample.text ? 'var(--accent-cyan)' : 'var(--border-subtle)' }}
-            >
-              <div className="flex items-center justify-between" style={{ marginBottom: '6px' }}>
-                <div className="flex items-center gap-2" style={{ color: '#fff', fontSize: '14px', fontWeight: 600 }}>
-                  <span style={{ color: 'var(--accent-cyan)' }}>{sample.icon}</span>
-                  {sample.title}
-                </div>
-                <span className="badge badge-cyan" style={{ fontSize: '10px', padding: '2px 8px' }}>{sample.badge}</span>
-              </div>
-              <p style={{ color: 'var(--text-muted)', fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                {sample.text}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Form */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div style={{ position: 'relative' }}>
-          <textarea
-            value={promptText}
-            onChange={(e) => setPromptText(e.target.value)}
-            placeholder="Paste your raw AI prompt here to analyze token bloat, classify task complexity, and calculate model savings..."
-            rows={5}
-            style={{
-              width: '100%',
-              background: 'var(--bg-surface)',
-              color: 'var(--text-main)',
-              border: '1px solid var(--border-medium)',
-              borderRadius: '12px',
-              padding: '16px',
-              fontSize: '15px',
-              fontFamily: 'Inter, sans-serif',
-              outline: 'none',
-              resize: 'vertical',
-              transition: 'border-color 150ms ease, box-shadow 150ms ease',
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'var(--accent-cyan)';
-              e.target.style.boxShadow = '0 0 15px rgba(0, 242, 254, 0.15)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = 'var(--border-medium)';
-              e.target.style.boxShadow = 'none';
-            }}
-          />
-          <div
-            className="flex items-center gap-3"
-            style={{
-              position: 'absolute',
-              bottom: '12px',
-              right: '16px',
-              background: 'rgba(14, 18, 26, 0.85)',
-              padding: '4px 12px',
-              borderRadius: '999px',
-              border: '1px solid var(--border-subtle)',
-              fontSize: '12px',
-              color: 'var(--text-muted)',
-            }}
-          >
-            <span>Characters: <strong style={{ color: '#fff' }}>{promptText.length}</strong></span>
-            <span>•</span>
-            <span>Est. Tokens: <strong style={{ color: 'var(--accent-cyan)' }}>~{estimatedTokens}</strong></span>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4" style={{ marginTop: '4px' }}>
-          <div className="flex items-center gap-2">
-            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>User Profile ID:</span>
-            <input
-              type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              style={{
-                background: 'rgba(0,0,0,0.4)',
-                color: 'var(--accent-purple)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '8px',
-                padding: '6px 12px',
-                fontSize: '13px',
-                fontWeight: 600,
-                outline: 'none',
-              }}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading || !promptText.trim()}
-            className={`btn btn-primary ${isLoading ? 'animate-pulse-glow' : ''}`}
-            style={{
-              padding: '14px 32px',
-              fontSize: '16px',
-              opacity: isLoading || !promptText.trim() ? 0.7 : 1,
-            }}
-          >
-            {isLoading ? (
-              <>
-                <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>⏳</span>
-                Running Agentic Pipeline...
-              </>
-            ) : (
-              <>
-                <Play size={18} fill="currentColor" />
-                Analyze & Optimize Prompt
-              </>
+      {/* Main Command Center Box */}
+      <form onSubmit={handleSubmit} className="relative">
+        <div 
+          className={`rounded-2xl bg-[#131822]/95 backdrop-blur-xl border transition-all duration-300 p-5 shadow-[0_16px_50px_rgba(0,0,0,0.5)] ${
+            isDragging 
+              ? 'border-cyan-400 bg-cyan-500/[0.05] shadow-[0_0_40px_rgba(0,242,254,0.2)]' 
+              : 'border-white/[0.08] hover:border-white/[0.14] focus-within:border-cyan-500/50 focus-within:shadow-[0_0_35px_rgba(0,242,254,0.12)]'
+          }`}
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+            handleFileUpload(e.dataTransfer.files);
+          }}
+        >
+          {/* Staged Files Display */}
+          <AnimatePresence>
+            {files.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-white/[0.06]"
+              >
+                {files.map((file) => (
+                  <motion.div
+                    key={file.id}
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#1D2532] border border-white/10 text-xs text-slate-200 group"
+                  >
+                    {getFileIcon(file.type, file.name)}
+                    <span className="max-w-[150px] truncate font-medium">{file.name}</span>
+                    <span className="text-[10px] font-mono text-slate-500">({formatFileSize(file.size)})</span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(file.id)}
+                      className="text-slate-500 hover:text-rose-400 ml-1 p-0.5 rounded transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </motion.div>
+                ))}
+              </motion.div>
             )}
-          </button>
+          </AnimatePresence>
+
+          {/* Textarea */}
+          <div className="relative">
+            <textarea
+              ref={textareaRef}
+              value={prompt}
+              onChange={handleTextChange}
+              placeholder="Describe your prompt or paste it here... (e.g., 'Act as a Senior Architect, create a TypeScript React data table with Zod validation...')"
+              className="w-full min-h-[160px] max-h-[420px] bg-transparent border-none text-white placeholder:text-slate-500 text-base leading-relaxed focus:outline-none focus:ring-0 resize-none custom-scrollbar font-mono sm:font-sans"
+              disabled={isLoading}
+            />
+
+            {/* Drag & Drop overlay cue */}
+            {isDragging && (
+              <div className="absolute inset-0 bg-[#131822]/90 rounded-xl border-2 border-dashed border-cyan-400 flex flex-col items-center justify-center gap-2 text-cyan-400 pointer-events-none z-10 animate-pulse">
+                <Upload className="w-8 h-8" />
+                <span className="font-semibold text-sm font-mono">Drop files to stage as prompt context</span>
+              </div>
+            )}
+          </div>
+
+          {/* Console Footer Toolbar */}
+          <div className="mt-4 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Left: Telemetry Counter Pill */}
+            <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
+              <div className="flex items-center gap-1.5">
+                <span className="text-slate-500">Words:</span>
+                <span className="text-white font-semibold">{wordCount}</span>
+              </div>
+              <div className="h-3 w-[1px] bg-white/10" />
+              <div className="flex items-center gap-1.5">
+                <span className="text-slate-500">Chars:</span>
+                <span className="text-white font-semibold">{charCount}</span>
+              </div>
+              <div className="h-3 w-[1px] bg-white/10" />
+              <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded text-cyan-400">
+                <span>Est. Tokens:</span>
+                <span className="font-bold">{estimatedTokens}</span>
+              </div>
+            </div>
+
+            {/* Right: Secondary Actions */}
+            <div className="flex items-center flex-wrap gap-2 w-full sm:w-auto justify-end">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={(e) => handleFileUpload(e.target.files)}
+                multiple
+                accept=".txt,.md,.json,.csv,.pdf,.docx,image/*"
+                className="hidden"
+              />
+              
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+                className="px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-1.5"
+                title="Upload PDF, TXT, MD, JSON, CSV or Image"
+              >
+                <Upload className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Upload</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handlePasteFromClipboard}
+                disabled={isLoading}
+                className="px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-1.5"
+                title="Paste from clipboard"
+              >
+                <Clipboard className="w-3.5 h-3.5 text-blue-400" />
+                <span>Paste</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleClearAll}
+                disabled={isLoading || (!prompt && files.length === 0)}
+                className="px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-rose-500/10 hover:border-rose-500/20 border border-white/[0.08] text-xs font-medium text-slate-400 hover:text-rose-400 transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:pointer-events-none"
+                title="Clear all text and files"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Clear</span>
+              </button>
+
+              {/* Primary Analyze Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="ml-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm font-semibold shadow-[0_0_25px_rgba(0,242,254,0.3)] hover:shadow-[0_0_35px_rgba(0,242,254,0.5)] active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none group border border-white/20"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Optimizing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-white group-hover:rotate-45 transition-transform duration-300" />
+                    <span>Analyze Prompt</span>
+                    <ArrowRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </form>
+
+      {/* Error Alert Box */}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-3 text-rose-300 text-sm shadow-lg"
+          >
+            <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0" />
+            <span className="flex-1 font-medium">{errorMessage}</span>
+            <button
+              onClick={() => setErrorMessage(null)}
+              className="text-xs text-rose-400 hover:text-white underline font-mono ml-auto"
+            >
+              Dismiss
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

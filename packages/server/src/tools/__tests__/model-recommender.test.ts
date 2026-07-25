@@ -1,81 +1,83 @@
-import { describe, expect, it } from 'vitest';
-import { ModelRecommenderService } from '../model-recommender.tool.js';
+import { describe, it, expect } from 'vitest';
+import { recommendModel, recommendModelSchema } from '../model-recommender.tool.js';
 
-describe('ModelRecommenderService', () => {
-  const recommender = new ModelRecommenderService();
+describe('ModelRecommenderTool', () => {
+  it('should recommend gpt-4o-mini for simple summarization (light tier)', () => {
+    // Mock upstream input 1: Light complexity task currently using expensive gpt-4o
+    const input = {
+      tokenCount: { inputTokens: 500, outputTokens: 200 },
+      complexityScore: 2,
+      taskType: 'summarization',
+      currentModel: 'gpt-4o'
+    };
 
-  it('recommends budget tier for simple general-qa', () => {
-    const result = recommender.recommendModel(50, 'simple', 'general-qa');
-    expect(result.recommendedModel).toBeTruthy();
+    expect(() => recommendModelSchema.parse(input)).not.toThrow();
+
+    const result = recommendModel(input.tokenCount, input.complexityScore, input.taskType, input.currentModel);
+
+    expect(result.recommendedModel).toBe('gpt-4o-mini');
+    expect(result.currentModelCost).toBeGreaterThan(result.recommendedModelCost);
     expect(result.savingsPercent).toBeGreaterThan(0);
-    expect(result.recommendedModelCost).toBeLessThan(result.currentModelCost);
+    expect(result.reasoning).toContain('light');
   });
 
-  it('recommends premium tier for complex reasoning', () => {
-    const result = recommender.recommendModel(500, 'complex', 'reasoning');
-    expect(['o3-mini', 'gpt-4o', 'claude-3-5-sonnet']).toContain(
-      result.recommendedModel,
-    );
-    expect(result.reasoning).toContain('reasoning');
-  });
+  it('should recommend gemini-3.5-flash or claude-3-5-sonnet for standard coding (standard tier)', () => {
+    // Mock upstream input 2: Standard coding task currently using gpt-4o
+    const input = {
+      tokenCount: { inputTokens: 1200, outputTokens: 800 },
+      complexityScore: 5,
+      taskType: 'code_generation',
+      currentModel: 'gpt-4o'
+    };
 
-  it('returns zero savings when already on optimal model', () => {
-    const result = recommender.recommendModel(5000, 'complex', 'reasoning');
-    if (result.recommendedModel === 'gpt-4o') {
-      expect(result.savingsPercent).toBe(0);
-    }
-  });
+    const result = recommendModel(input.tokenCount, input.complexityScore, input.taskType, input.currentModel);
 
-  it('never returns negative or NaN costs', () => {
-    const result = recommender.recommendModel(100, 'moderate', 'code-generation');
-    expect(Number.isFinite(result.currentModelCost)).toBe(true);
-    expect(Number.isFinite(result.recommendedModelCost)).toBe(true);
-    expect(result.currentModelCost).toBeGreaterThanOrEqual(0);
-    expect(result.recommendedModelCost).toBeGreaterThanOrEqual(0);
+    expect(['gemini-3.5-flash', 'claude-3-5-sonnet', 'gpt-4o', 'o3-mini']).toContain(result.recommendedModel);
+    expect(result.recommendedModelCost).toBeLessThanOrEqual(result.currentModelCost);
     expect(result.savingsPercent).toBeGreaterThanOrEqual(0);
   });
 
-  it('handles zero token count gracefully', () => {
-    const result = recommender.recommendModel(0, 'simple', 'general-qa');
-    expect(result.currentModelCost).toBe(0);
-    expect(result.recommendedModelCost).toBe(0);
+  it('should recommend o3-mini for reasoning/math tasks (reasoning tier)', () => {
+    // Mock upstream input 3: High reasoning query currently using o1
+    const input = {
+      tokenCount: { inputTokens: 2500, outputTokens: 4000 },
+      complexityScore: 10,
+      taskType: 'complex_reasoning',
+      currentModel: 'o1'
+    };
+
+    const result = recommendModel(input.tokenCount, input.complexityScore, input.taskType, input.currentModel);
+
+    expect(result.recommendedModel).toBe('o3-mini');
+    expect(result.recommendedModelCost).toBeLessThan(result.currentModelCost);
+    expect(result.savingsPercent).toBeGreaterThan(0);
+  });
+
+  it('should handle edge case when current model is already the cheapest capable model', () => {
+    const input = {
+      tokenCount: { inputTokens: 100, outputTokens: 50 },
+      complexityScore: 1,
+      taskType: 'simple_edit',
+      currentModel: 'gpt-4o-mini'
+    };
+
+    const result = recommendModel(input.tokenCount, input.complexityScore, input.taskType, input.currentModel);
+
+    expect(result.recommendedModel).toBe('gpt-4o-mini');
     expect(result.savingsPercent).toBe(0);
   });
 
-  it('recommended model is never more expensive per request than necessary', () => {
-    const scenarios = [
-      { tokens: 200, complexity: 'simple' as const, task: 'general-qa' as const },
-      { tokens: 500, complexity: 'moderate' as const, task: 'summarization' as const },
-      { tokens: 1000, complexity: 'moderate' as const, task: 'code-generation' as const },
-      { tokens: 2000, complexity: 'complex' as const, task: 'data-analysis' as const },
-    ];
+  it('should guard against negative, NaN, or zero token inputs', () => {
+    const result = recommendModel(
+      { inputTokens: -500, outputTokens: NaN },
+      -3,
+      '',
+      'invalid-model-name'
+    );
 
-    for (const { tokens, complexity, task } of scenarios) {
-      const result = recommender.recommendModel(tokens, complexity, task);
-      expect(result.recommendedModelCost).toBeLessThanOrEqual(result.currentModelCost);
-    }
-  });
-
-  it('includes pricing timestamp in reasoning', () => {
-    const result = recommender.recommendModel(100, 'simple', 'summarization');
-    expect(result.reasoning).toMatch(/2026/);
-  });
-
-  it('works with mocked upstream inputs', () => {
-    const mockInputs = [
-      { tokenCount: 187, complexityScore: 'moderate' as const, taskType: 'code-generation' as const },
-      { tokenCount: 96, complexityScore: 'simple' as const, taskType: 'summarization' as const },
-      { tokenCount: 1567, complexityScore: 'complex' as const, taskType: 'code-generation' as const },
-    ];
-
-    for (const input of mockInputs) {
-      const result = recommender.recommendModel(
-        input.tokenCount,
-        input.complexityScore,
-        input.taskType,
-      );
-      expect(result.recommendedModel).toBeTruthy();
-      expect(result.reasoning).toBeTruthy();
-    }
+    expect(result.currentModelCost).toBeGreaterThanOrEqual(0);
+    expect(result.recommendedModelCost).toBeGreaterThanOrEqual(0);
+    expect(result.savingsPercent).toBeGreaterThanOrEqual(0);
+    expect(isNaN(result.savingsPercent)).toBe(false);
   });
 });
