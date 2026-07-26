@@ -12,9 +12,11 @@ const __dirname = path.dirname(__filename);
 
 function loadJsonData(relPath: string) {
   const possiblePaths = [
+    path.resolve(process.cwd(), `packages/server/dist/${relPath}`),
     path.resolve(process.cwd(), `packages/server/src/${relPath}`),
     path.resolve(__dirname, `../${relPath}`),
-    path.resolve(__dirname, `../../src/${relPath}`)
+    path.resolve(__dirname, `../../src/${relPath}`),
+    path.resolve(process.cwd(), relPath)
   ];
   for (const p of possiblePaths) {
     if (fs.existsSync(p)) {

@@ -12,9 +12,11 @@ const __dirname = path.dirname(__filename);
 
 function loadPricingTable() {
   const possiblePaths = [
+    path.resolve(process.cwd(), 'packages/server/dist/data/pricing-table.json'),
     path.resolve(process.cwd(), 'packages/server/src/data/pricing-table.json'),
     path.resolve(__dirname, '../data/pricing-table.json'),
-    path.resolve(__dirname, '../../src/data/pricing-table.json')
+    path.resolve(__dirname, '../../src/data/pricing-table.json'),
+    path.resolve(process.cwd(), 'data/pricing-table.json')
   ];
   for (const p of possiblePaths) {
     if (fs.existsSync(p)) {
