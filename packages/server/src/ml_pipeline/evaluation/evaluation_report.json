@@ -1,22 +1,127 @@
 {
-  "evaluationSummary": "TokenSlash 3-Model Intelligence Suite Performance Report",
-  "sampleCount": 1247,
-  "featureCount": 80,
-  "targetModels": {
+  "sampleSize": 1500,
+  "split": "70% Train / 15% Validation / 15% Test Grouped User Split",
+  "featureCount": 77,
+  "featureNames": [
+    "charCount",
+    "wordCount",
+    "sentenceCount",
+    "estTokens",
+    "complexityScore",
+    "codeDensity",
+    "reasoningDensity",
+    "mathDensity",
+    "researchDensity",
+    "summarizationDensity",
+    "translationDensity",
+    "creativeDensity",
+    "isJsonRequest",
+    "isTableRequest",
+    "isCotRequired",
+    "isToolUsage",
+    "isMultimodal",
+    "phrase_step_by_step",
+    "phrase_think_carefully",
+    "phrase_chain_of_thought",
+    "phrase_debug",
+    "phrase_refactor",
+    "phrase_optimize",
+    "phrase_summarize",
+    "phrase_translate",
+    "phrase_research",
+    "phrase_analyze",
+    "phrase_reason",
+    "phrase_mathematical_proof",
+    "phrase_write_code",
+    "phrase_system_design",
+    "phrase_architecture",
+    "phrase_generate_sql",
+    "phrase_generate_python",
+    "phrase_react",
+    "phrase_nextjs",
+    "phrase_tensorflow",
+    "phrase_qiskit",
+    "phrase_quantum",
+    "phrase_legal",
+    "phrase_medical",
+    "phrase_finance",
+    "phrase_creative",
+    "phrase_story",
+    "phrase_email",
+    "phrase_blog",
+    "phrase_presentation",
+    "phrase_powerpoint",
+    "phrase_latex",
+    "phrase_csv",
+    "phrase_json",
+    "phrase_api",
+    "phrase_docker",
+    "phrase_linux",
+    "phrase_kubernetes",
+    "phrase_machine_learning",
+    "phrase_deep_learning",
+    "phrase_computer_vision",
+    "phrase_nlp",
+    "priorAvgLength",
+    "priorAvgComplexity",
+    "priorCodeRatio",
+    "priorVerbosity",
+    "monthlyVolume",
+    "inputCostPerM",
+    "outputCostPerM",
+    "contextWindow",
+    "baseLatency",
+    "codingScore",
+    "writingScore",
+    "reasoningScore",
+    "mathScore",
+    "visionScore",
+    "lmsysElo",
+    "sweBench",
+    "reliabilityScore",
+    "hallucinationRate"
+  ],
+  "models": {
     "model1_satisfaction": {
-      "algorithm": "XGBoost",
+      "algorithm": "RandomForest",
       "valMetrics": {
-        "mae": 0.0529,
-        "rmse": 0.1209,
-        "r2": 1.0
+        "mae": 1.5331,
+        "rmse": 1.9763,
+        "r2": 0.8963
       },
       "testMetrics": {
-        "mae": 0.1118,
-        "rmse": 0.5744,
-        "r2": 0.9994
+        "mae": 1.5776,
+        "rmse": 1.9971,
+        "r2": 0.8901
       }
     },
     "model2_retries": {
+      "algorithm": "XGBoost",
+      "valMetrics": {
+        "mae": 0.141,
+        "rmse": 0.1732,
+        "r2": 0.1769
+      },
+      "testMetrics": {
+        "mae": 0.1273,
+        "rmse": 0.1533,
+        "r2": 0.2498
+      }
+    },
+    "model3_latency": {
+      "algorithm": "XGBoost",
+      "valMetrics": {
+        "mae": 0.2648,
+        "rmse": 0.328,
+        "r2": 0.9694
+      },
+      "testMetrics": {
+        "mae": 0.2629,
+        "rmse": 0.3174,
+        "r2": 0.967
+      }
+    },
+    "complexity_model": {
       "algorithm": "RandomForest",
       "valMetrics": {
         "mae": 0.0,
@@ -29,79 +134,31 @@
         "r2": 1.0
       }
     },
-    "model3_latency": {
-      "algorithm": "LightGBM",
+    "cost_model": {
+      "algorithm": "RandomForest",
       "valMetrics": {
-        "mae": 0.1732,
-        "rmse": 0.2232,
-        "r2": 0.9836
+        "mae": 0.0,
+        "rmse": 0.0,
+        "r2": 1.0
       },
       "testMetrics": {
-        "mae": 0.1828,
-        "rmse": 0.2261,
-        "r2": 0.9816
+        "mae": 0.0,
+        "rmse": 0.0,
+        "r2": 1.0
+      }
+    },
+    "promptiq_meta_model": {
+      "algorithm": "RandomForest",
+      "valMetrics": {
+        "mae": 1.5331,
+        "rmse": 1.9763,
+        "r2": 0.8963
+      },
+      "testMetrics": {
+        "mae": 1.5776,
+        "rmse": 1.9971,
+        "r2": 0.8901
       }
     }
-  },
-  "topFeatureImportances": {
-    "Model 1 (Satisfaction)": {
-      "acceptanceRate": 0.97841,
-      "userSatIndex": 0.02136,
-      "avgRetries": 0.00024,
-      "charCount": 0.0,
-      "wordCount": 0.0,
-      "sentenceCount": 0.0,
-      "estTokens": 0.0,
-      "complexityScore": 0.0,
-      "codeDensity": 0.0,
-      "reasoningDensity": 0.0,
-      "mathDensity": 0.0,
-      "researchDensity": 0.0,
-      "summarizationDensity": 0.0,
-      "translationDensity": 0.0,
-      "creativeDensity": 0.0
-    },
-    "Model 2 (Retries)": {
-      "avgRetries": 1.0,
-      "charCount": 0.0,
-      "wordCount": 0.0,
-      "sentenceCount": 0.0,
-      "estTokens": 0.0,
-      "complexityScore": 0.0,
-      "codeDensity": 0.0,
-      "reasoningDensity": 0.0,
-      "mathDensity": 0.0,
-      "researchDensity": 0.0,
-      "summarizationDensity": 0.0,
-      "translationDensity": 0.0,
-      "creativeDensity": 0.0,
-      "isJsonRequest": 0.0,
-      "isTableRequest": 0.0
-    },
-    "Model 3 (Latency)": {
-      "wordCount": 598.0,
-      "charCount": 442.0,
-      "userSatIndex": 237.0,
-      "inputCostPerM": 224.0,
-      "baseLatency": 197.0,
-      "mathDensity": 186.0,
-      "sentenceCount": 166.0,
-      "complexityScore": 69.0,
-      "userCodeRatio": 61.0,
-      "contextWindow": 40.0,
-      "reasoningDensity": 39.0,
-      "avgComplexity": 28.0,
-      "codeDensity": 25.0,
-      "isToolUsage": 19.0,
-      "creativeDensity": 16.0
-    }
-  },
-  "calibration": {
-    "confidenceThreshold": 0.85,
-    "satisfactionMinMax": [
-      0,
-      100
-    ],
-    "maxRetriesCap": 4
   }
 }

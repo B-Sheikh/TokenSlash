@@ -1,7 +1,7 @@
 {
-  "sampleSize": 1247,
-  "split": "70% Train / 15% Validation / 15% Test",
-  "featureCount": 80,
+  "sampleSize": 1500,
+  "split": "70% Train / 15% Validation / 15% Test Grouped User Split",
+  "featureCount": 77,
   "featureNames": [
     "charCount",
     "wordCount",
@@ -62,14 +62,11 @@
     "phrase_deep_learning",
     "phrase_computer_vision",
     "phrase_nlp",
-    "avgPromptLength",
-    "avgComplexity",
-    "avgRetries",
-    "acceptanceRate",
-    "userCodeRatio",
-    "userVerbosity",
+    "priorAvgLength",
+    "priorAvgComplexity",
+    "priorCodeRatio",
+    "priorVerbosity",
     "monthlyVolume",
-    "userSatIndex",
     "inputCostPerM",
     "outputCostPerM",
     "contextWindow",
@@ -86,19 +83,45 @@
   ],
   "models": {
     "model1_satisfaction": {
-      "algorithm": "XGBoost",
+      "algorithm": "RandomForest",
       "valMetrics": {
-        "mae": 0.0529,
-        "rmse": 0.1209,
-        "r2": 1.0
+        "mae": 1.5331,
+        "rmse": 1.9763,
+        "r2": 0.8963
       },
       "testMetrics": {
-        "mae": 0.1118,
-        "rmse": 0.5744,
-        "r2": 0.9994
+        "mae": 1.5776,
+        "rmse": 1.9971,
+        "r2": 0.8901
       }
     },
     "model2_retries": {
+      "algorithm": "XGBoost",
+      "valMetrics": {
+        "mae": 0.141,
+        "rmse": 0.1732,
+        "r2": 0.1769
+      },
+      "testMetrics": {
+        "mae": 0.1273,
+        "rmse": 0.1533,
+        "r2": 0.2498
+      }
+    },
+    "model3_latency": {
+      "algorithm": "XGBoost",
+      "valMetrics": {
+        "mae": 0.2648,
+        "rmse": 0.328,
+        "r2": 0.9694
+      },
+      "testMetrics": {
+        "mae": 0.2629,
+        "rmse": 0.3174,
+        "r2": 0.967
+      }
+    },
+    "complexity_model": {
       "algorithm": "RandomForest",
       "valMetrics": {
         "mae": 0.0,
@@ -111,17 +134,30 @@
         "r2": 1.0
       }
     },
-    "model3_latency": {
-      "algorithm": "LightGBM",
+    "cost_model": {
+      "algorithm": "RandomForest",
       "valMetrics": {
-        "mae": 0.1732,
-        "rmse": 0.2232,
-        "r2": 0.9836
+        "mae": 0.0,
+        "rmse": 0.0,
+        "r2": 1.0
       },
       "testMetrics": {
-        "mae": 0.1828,
-        "rmse": 0.2261,
-        "r2": 0.9816
+        "mae": 0.0,
+        "rmse": 0.0,
+        "r2": 1.0
+      }
+    },
+    "promptiq_meta_model": {
+      "algorithm": "RandomForest",
+      "valMetrics": {
+        "mae": 1.5331,
+        "rmse": 1.9763,
+        "r2": 0.8963
+      },
+      "testMetrics": {
+        "mae": 1.5776,
+        "rmse": 1.9971,
+        "r2": 0.8901
       }
     }
   }
