@@ -13,14 +13,16 @@ import { MetaSynthesizerService } from './orchestration/meta-synthesizer.service
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = 3001;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 // Load pricing table to resolve provider names from model names
 function loadPricingModels(): Array<{ provider: string; model: string }> {
   const possiblePaths = [
+    path.resolve(process.cwd(), 'packages/server/dist/data/pricing-table.json'),
     path.resolve(process.cwd(), 'packages/server/src/data/pricing-table.json'),
     path.resolve(__dirname, './data/pricing-table.json'),
     path.resolve(__dirname, '../src/data/pricing-table.json'),
+    path.resolve(process.cwd(), 'data/pricing-table.json'),
   ];
   for (const p of possiblePaths) {
     if (fs.existsSync(p)) {
@@ -60,6 +62,13 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
     res.end();
+    return;
+  }
+
+  // Cloud Health Probes (GET /, GET /health, GET /api/health)
+  if (req.method === 'GET' && (req.url === '/' || req.url === '/health' || req.url === '/api/health')) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', server: 'TokenSlash ML API Server', port: PORT }));
     return;
   }
 
@@ -157,18 +166,15 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: e.message }));
       }
     });
-  } else if (req.url === '/api/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', server: 'TokenSlash ML API Server', port: PORT }));
   } else {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Endpoint not found' }));
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`========================================================`);
-  console.log(` ⚡ TokenSlash ML REST API Bridge Server running at http://localhost:${PORT}`);
-  console.log(` Endpoint: POST http://localhost:${PORT}/api/optimize`);
+  console.log(` ⚡ TokenSlash ML REST API Bridge Server running on 0.0.0.0:${PORT}`);
+  console.log(` Endpoint: POST http://0.0.0.0:${PORT}/api/optimize`);
   console.log(`========================================================`);
 });
