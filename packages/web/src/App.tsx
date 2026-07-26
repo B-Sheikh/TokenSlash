@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TopNav } from './components/TopNav';
+import { TopNav, UserProfile } from './components/TopNav';
 import { Sidebar } from './components/Sidebar';
 import { PromptInput } from './components/PromptInput';
 import { ReportView } from './components/ReportView';
@@ -17,6 +17,12 @@ import { Sparkles, AlertTriangle, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
+const initialUsers: UserProfile[] = [
+  { id: 'abhishek-dev', name: 'Abhishek Bharathi', email: 'abhishek@tokenslash.ai', role: 'Lead Architect', avatarColor: 'from-cyan-500 to-blue-600' },
+  { id: 'demo-user', name: 'Demo Team', email: 'demo@tokenslash.ai', role: 'Enterprise Account', avatarColor: 'from-purple-500 to-indigo-600' },
+  { id: 'devops-lead', name: 'DevOps Lead', email: 'ops@tokenslash.ai', role: 'Infrastructure', avatarColor: 'from-emerald-500 to-teal-600' }
+];
+
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [report, setReport] = useState<FinalReport | null>(null);
@@ -24,6 +30,10 @@ export const App: React.FC = () => {
   const [loadingStep, setLoadingStep] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'analyzing' | 'offline' | 'waiting'>('connected');
+
+  // User management state
+  const [userProfiles, setUserProfiles] = useState<UserProfile[]>(initialUsers);
+  const [currentUser, setCurrentUser] = useState<UserProfile>(initialUsers[0]);
 
   const loadingMessages = [
     'Optimizing your prompt structure with Zod delimiters...',
@@ -48,6 +58,25 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, [isLoading, report, error]);
 
+  const handleCreateUser = (newUser: { name: string; email: string; role: string }) => {
+    const avatarGradients = [
+      'from-rose-500 to-pink-600',
+      'from-amber-500 to-orange-600',
+      'from-emerald-500 to-green-600',
+      'from-cyan-500 to-blue-600',
+      'from-[#00F2FE] to-indigo-600'
+    ];
+    const created: UserProfile = {
+      id: `user-${Date.now().toString(36)}`,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+      avatarColor: avatarGradients[userProfiles.length % avatarGradients.length]
+    };
+    setUserProfiles([created, ...userProfiles]);
+    setCurrentUser(created);
+  };
+
   const handleAnalyzePrompt = async (promptText: string) => {
     setIsLoading(true);
     setError(null);
@@ -63,10 +92,26 @@ export const App: React.FC = () => {
         apiUrl,
         {
           prompt: promptText,
-          userId: 'demo-user',
+          userId: currentUser.id,
         },
         { timeout: 5000 }
       );
+
+      setReport(response.data as FinalReport);
+    } catch (err: any) {
+      console.warn('Live API call error or timeout, checking fallback:', err.message);
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      const customizedMock: FinalReport = {
+        ...(mockData as unknown as FinalReport),
+        originalPrompt: promptText || (mockData as unknown as FinalReport).originalPrompt,
+        originalTokens: Math.max(Math.ceil(promptText.length / 3.8), 210),
+        optimizedTokens: Math.max(Math.ceil((promptText.length / 3.8) * 0.38), 85),
+      };
+      setReport(customizedMock);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
       setReport(response.data as FinalReport);
     } catch (err: any) {
@@ -224,7 +269,13 @@ export const App: React.FC = () => {
       </div>
 
       {/* Top Sticky Navigation */}
-      <TopNav status={connectionStatus} />
+      <TopNav 
+        status={connectionStatus}
+        currentUser={currentUser}
+        userProfiles={userProfiles}
+        onSelectUser={setCurrentUser}
+        onCreateUser={handleCreateUser}
+      />
 
       {/* Main Workspace Body */}
       <div className="flex-1 flex relative z-10">
