@@ -64,7 +64,7 @@ export class PipelineService {
       const taskType = complexity.data?.taskType ?? 'general-qa';
 
       return Promise.resolve(
-        this.modelRecommender.recommendModel(tokenCount, complexityScore, taskType),
+        this.modelRecommender.recommendModel(tokenCount, complexityScore, taskType, 'gpt-4o', prompt),
       );
     });
 

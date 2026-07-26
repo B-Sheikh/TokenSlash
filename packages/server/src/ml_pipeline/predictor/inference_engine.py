@@ -24,14 +24,17 @@ except ImportError:
 try:
     from ..features.feature_extractor import PromptIQFeatureExtractor
     from ..dataset.fetch_public_datasets import get_official_pricing_data, get_ai_benchmark_scores
-    from .promptiq_scoring import calculate_promptiq_score
+    from .tokenslash_scoring import calculate_promptiq_score
 except (ImportError, ValueError):
     import sys
     base_dir = os.path.dirname(os.path.abspath(__file__))
     sys.path.append(os.path.abspath(os.path.join(base_dir, "..")))
     from features.feature_extractor import PromptIQFeatureExtractor
     from dataset.fetch_public_datasets import get_official_pricing_data, get_ai_benchmark_scores
-    from predictor.promptiq_scoring import calculate_promptiq_score
+    try:
+        from predictor.tokenslash_scoring import calculate_promptiq_score
+    except ImportError:
+        from tokenslash_scoring import calculate_promptiq_score
 
 class PromptIQInferenceEngine:
     def __init__(self, models_dir=None):
@@ -185,8 +188,16 @@ class PromptIQInferenceEngine:
         }
 
 if __name__ == "__main__":
-    engine = PromptIQInferenceEngine()
-    test_prompt = "Refactor this React component step by step using Next.js Server Actions and Zod schema validation."
-    result = engine.predict_recommendation(test_prompt)
-    print("\n--- PromptIQ ML Inference Test Output ---")
-    print(json.dumps(result, indent=2))
+    if len(sys.argv) > 1:
+        prompt_text = sys.argv[1]
+        current_model = sys.argv[2] if len(sys.argv) > 2 else "gpt-4o"
+        mode = sys.argv[3] if len(sys.argv) > 3 else "balanced"
+        engine = PromptIQInferenceEngine()
+        result = engine.predict_recommendation(prompt_text, current_model=current_model, mode=mode)
+        print(json.dumps(result))
+    else:
+        engine = PromptIQInferenceEngine()
+        test_prompt = "Refactor this React component step by step using Next.js Server Actions and Zod schema validation."
+        result = engine.predict_recommendation(test_prompt)
+        print("\n--- PromptIQ ML Inference Test Output ---")
+        print(json.dumps(result, indent=2))
