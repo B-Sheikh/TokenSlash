@@ -1,4 +1,4 @@
-import { ConfigModule, McpApp, Module } from '@nitrostack/core';
+import { ConfigModule, McpApp, Module, OAuthModule } from '@nitrostack/core';
 import { TokenSlashModule } from './modules/tokenslash.module.js';
 
 @McpApp({
@@ -21,6 +21,14 @@ import { TokenSlashModule } from './modules/tokenslash.module.js';
 @Module({
   name: 'app',
   description: 'TokenSlash MCP server root module',
-  imports: [ConfigModule.forRoot(), TokenSlashModule],
+  imports: [
+    ConfigModule.forRoot(),
+    OAuthModule.forRoot({
+      resourceUri: process.env.RESOURCE_URI || 'http://0.0.0.0:3000',
+      authorizationServers: [process.env.RESOURCE_URI || 'http://0.0.0.0:3000'],
+      required: false,
+    }),
+    TokenSlashModule,
+  ],
 })
 export class AppModule {}
