@@ -10,6 +10,7 @@
 
 - [Overview](#overview)
 - [What is MCP?](#what-is-mcp)
+- [How MCP is Used in Token-Slash](#how-mcp-is-used-in-token-slash)
 - [Features](#features)
 - [Live Demo](#live-demo)
 - [Getting Started](#getting-started)
@@ -35,6 +36,30 @@ TokenSlash is created based on NitroStack SDK and Model Context Protocol and wor
 The **Model Context Protocol (MCP)** is an open standard that lets AI assistants securely connect to external tools, data sources, and services. Instead of being limited to what it was trained on, an AI model can call **MCP servers** to fetch live data, run actions, and integrate with real systems.
 
 This project is one such MCP server. Learn more about building and shipping MCP apps at [nitrostack.ai](https://nitrostack.ai).
+
+## How MCP is Used in Token-Slash
+
+Token-Slash utilizes the **Model Context Protocol (MCP)** via the **NitroStack Framework** to serve as a standardized, protocol-compliant AI optimization server. By implementing MCP, Token-Slash allows any MCP client (such as Claude Desktop, Cursor IDE, NitroChat, or custom LLM agents) to natively invoke prompt optimization, model recommendation, and token analysis without requiring custom API integration code.
+
+### 1. Protocol Architecture & Transports
+- **Streamable HTTP Transport (`/mcp`)**: Exposes high-throughput JSON-RPC 2.0 streaming for web clients and cloud environments.
+- **Server-Sent Events (`/sse`)**: Enables real-time, bi-directional communication between AI clients and the Token-Slash server.
+- **NitroStack `@McpApp` Engine**: Handles module dependency injection, tool schema validation, and lifecycle hooks natively.
+
+### 2. Exposed MCP Tools
+Token-Slash exposes 7 standardized tools to connected MCP clients:
+
+1. **`analyze_prompt`**: Executes the complete end-to-end TokenSlash pipeline, returning token metrics, task complexity, recommended model, optimized prompt structure, and cost savings analysis.
+2. **`rewrite_prompt`**: Algorithmic prompt refactoring engine that removes conversational filler tokens and applies strict XML structural tags (`<context>`, `<instructions>`, `<output_format>`).
+3. **`synthesize_report`**: Generates executive-level ROI summaries and 500k monthly volume cost savings projections.
+4. **`recommend_model`**: Runs the 4-Model Python ML Ensemble (**PromptIQ Predictor**) to evaluate satisfaction, latency, retry risk, and select the lowest-cost model with output parity.
+5. **`estimate_tokens`**: Computes exact BPE token counts and character ratios using `js-tiktoken` (`cl100k_base`).
+6. **`classify_complexity`**: Extracts 77 syntactic features and classifies task taxonomy and structural complexity (0–100 scale).
+7. **`analyze_history`**: Profiles multi-session user history to personalize model recommendations and domain tuning.
+
+### 3. Exposed MCP Resources
+- **`health://checks`**: Provides real-time health checks and status diagnostics for deployment monitoring.
+- **`widget://examples`**: Delivers interactive UI widget templates for embedded NitroChat displays.
 
 ## Features
 
