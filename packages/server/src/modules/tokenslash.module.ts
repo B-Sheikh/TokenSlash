@@ -1,4 +1,4 @@
-import { Module } from '@nitrostack/core';
+import { HealthCheck, HealthCheckInterface, HealthCheckResult, Module } from '@nitrostack/core';
 import { PipelineService } from '../orchestration/pipeline.service.js';
 import { MetaSynthesizerService } from '../orchestration/meta-synthesizer.service.js';
 import { PromptRewriterService } from '../orchestration/prompt-rewriter.service.js';
@@ -9,6 +9,13 @@ import { ModelRecommenderService, ModelRecommenderTool } from '../tools/model-re
 import { OrchestrationTools } from '../tools/orchestration.tool.js';
 import { PromptRewriterTools } from '../tools/prompt-rewriter.tool.js';
 import { TokenEstimatorService } from '../tools/token-estimator.tool.js';
+
+@HealthCheck({ name: 'server_health', description: 'TokenSlash Server Live Health Check' })
+export class ServerHealthCheck implements HealthCheckInterface {
+  check(): HealthCheckResult {
+    return { status: 'up', message: 'TokenSlash Server is healthy' };
+  }
+}
 
 @Module({
   name: 'tokenslash',
@@ -22,6 +29,7 @@ import { TokenEstimatorService } from '../tools/token-estimator.tool.js';
     HistoryAnalyzerTool,
   ],
   providers: [
+    ServerHealthCheck,
     PipelineService,
     PromptRewriterService,
     MetaSynthesizerService,
