@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cmd /c \"npx tsx src/main.ts\"",
-    "start": "cmd /c \"node dist/main.js\"",
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
     "build": "tsc && node scripts/copy-data.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
