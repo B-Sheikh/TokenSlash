@@ -11,6 +11,24 @@ if (!process.env.PORT) {
 
 async function bootstrap(): Promise<void> {
   const server = await McpApplicationFactory.create(AppModule);
+
+  // Attach root / and /health probe handlers to Express app for NitroCloud container ingress health checks
+  const httpTransport = (server as any).getHttpTransport?.() ?? (server as any).httpTransport;
+  if (httpTransport && typeof httpTransport.getApp === 'function') {
+    const app = httpTransport.getApp();
+    if (app) {
+      app.get('/', (_req: any, res: any) => {
+        res.json({ status: 'ok', server: 'tokenslash-server', health: 'healthy' });
+      });
+      app.get('/health', (_req: any, res: any) => {
+        res.json({ status: 'ok', server: 'tokenslash-server', health: 'healthy' });
+      });
+      app.get('/api/health', (_req: any, res: any) => {
+        res.json({ status: 'ok', server: 'tokenslash-server', health: 'healthy' });
+      });
+    }
+  }
+
   await server.start();
 }
 
