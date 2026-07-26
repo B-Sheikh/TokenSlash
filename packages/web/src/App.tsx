@@ -113,22 +113,6 @@ export const App: React.FC = () => {
     }
   };
 
-      setReport(response.data as FinalReport);
-    } catch (err: any) {
-      console.warn('Live API call error or timeout, checking fallback:', err.message);
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      const customizedMock: FinalReport = {
-        ...(mockData as unknown as FinalReport),
-        originalPrompt: promptText || (mockData as unknown as FinalReport).originalPrompt,
-        originalTokens: Math.max(Math.ceil(promptText.length / 3.8), 210),
-        optimizedTokens: Math.max(Math.ceil((promptText.length / 3.8) * 0.38), 85),
-      };
-      setReport(customizedMock);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleSelectPromptFromLibrary = (promptText: string) => {
     setReport(null);
     setActiveTab('dashboard');
