@@ -7,6 +7,13 @@ import { TokenSlashModule } from './modules/tokenslash.module.js';
     name: 'tokenslash-server',
     version: '0.1.0',
   },
+  transport: {
+    type: 'dual',
+    http: {
+      host: '0.0.0.0',
+      port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
+    },
+  },
   logging: {
     level: 'info',
   },
