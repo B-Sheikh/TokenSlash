@@ -1,120 +1,137 @@
-# TokenSlash — Enterprise AI Workspace & Prompt Optimization Platform ⚡
+# Token-Slash
 
-[![Hackathon Ready](https://img.shields.io/badge/Hackathon-NitroStack_MCP-00F2FE?style=for-the-badge&logo=google-deepmind&logoColor=black)](https://github.com/B-Sheikh/TokenSlash)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3B82F6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite + React](https://img.shields.io/badge/Frontend-React_18_%2B_Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://vitejs.dev)
-[![UI Polish](https://img.shields.io/badge/UI_Design-%24100M_SaaS_Grade-10B981?style=for-the-badge)](https://tailwindcss.com)
+> TokenSlash is an advanced solution for prompt optimization and model selection that uses Artificial Intelligence as its driving force, leading to considerably lower costs, reduced tokens consumption, and shorter time spans for Large Language Model software.
 
-**TokenSlash** is an award-winning, AI-first developer workspace designed to eliminate prompt bloat, enforce Zod schema validation rules, and dynamically route compute across LLM tiers using our custom **NitroStack MCP Engine**.
+![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-MCP-blue) ![Built with Nitrostack](https://img.shields.io/badge/Built%20with-Nitrostack-0A66FF) ![Status](https://img.shields.io/badge/status-live-brightgreen)
 
----
+**Token-Slash** is an [MCP (Model Context Protocol)](https://nitrostack.ai) server that extends AI assistants — like Claude, Cursor, and any MCP-compatible client — with new, real-world capabilities. It is built and deployed on [Nitrostack](https://nitrostack.ai), the fastest way to build, deploy, and share MCP apps.
 
-## 🌟 Key Features & Workspace Modules
+## Table of Contents
 
-TokenSlash includes a full suite of interactive enterprise views accessible via the sidebar navigation:
+- [Overview](#overview)
+- [What is MCP?](#what-is-mcp)
+- [Features](#features)
+- [Live Demo](#live-demo)
+- [Getting Started](#getting-started)
+- [Connect to an MCP Client](#connect-to-an-mcp-client)
+- [Deploy Your Own MCP App](#deploy-your-own-mcp-app)
+- [Explore More MCP Apps](#explore-more-mcp-apps)
+- [FAQ](#faq)
+- [Keywords](#keywords)
+- [License](#license)
 
-1. **⚡ Hero Optimization Console (`Dashboard`)**:
-   - Live AST syntactic prompt parsing, token reduction estimation, and real-time ROI calculation.
-   - Instantly compares token savings (e.g. 62.5% reduction) and projects monthly enterprise cost savings.
+## Overview
 
-2. **📜 Optimization History (`History`)**:
-   - Inspect, filter, and compare past prompt optimization sessions by model, date, or category.
-   - 1-click re-running of historical prompts directly inside the console.
+TokenSlash is an advanced solution for prompt optimization and model selection that uses Artificial Intelligence as its driving force, leading to considerably lower costs, reduced tokens consumption, and shorter time spans for Large Language Model software. It works as an intelligent layer between the user and the AI software, analyzing the prompts before it is deployed.
 
-3. **📊 Enterprise Telemetry & Analytics (`Analytics`)**:
-   - Recharts-powered interactive charts for 6-month token reduction growth, model route allocation (Gemini, Claude, GPT-4o, Llama), and latency distribution histogram.
+The system calculates tokens consumed, determines the type and complexity of the task, eliminates redundant or unnecessary content, and reformulates the prompt into a comprehensible form. Thereafter TokenSlash compares a number of AI models against their anticipated output quality, price, time for execution, and retry probability, in order to provide the user with the best possible solution in terms of cost and effective performance.
 
-4. **🔖 Saved Prompt Library (`Saved Prompts`)**:
-   - Curated enterprise prompt template library with tag filtering, category management, and custom template creation modal.
+TokenSlash is advantageous for developers, startups, teams working with products, departments engaged in customer support, enterprises, and teams responsible for governance. It is helpful for chatbots, coding assistants, document processing systems, support automation tools, and other systems dealing with AI technologies on a daily basis.
 
-5. **⭐ Favorites & Routing Presets (`Favorites`)**:
-   - Configure default compute routing presets (`Max Cost Optimization`, `Balanced Quality`, `Ultra Low Latency`).
+TokenSlash is created based on NitroStack SDK and Model Context Protocol and works with NitroCloud, NitroChat, Cursor, and Claude Desktop. So AI work becomes easier and more transparent.
 
-6. **⏱️ Recent Sessions & Audit Trail (`Recent Sessions`)**:
-   - Real-time audit log of MCP server tool calls, cache hits, latency metrics, and raw payload inspection drawer.
+## What is MCP?
 
-7. **⚙️ Platform Settings & MCP Config (`Settings`)**:
-   - Configure local REST API bridge URL (`http://localhost:3001`), provider API keys (Google Gemini, Anthropic, OpenAI), and target latency/savings thresholds.
+The **Model Context Protocol (MCP)** is an open standard that lets AI assistants securely connect to external tools, data sources, and services. Instead of being limited to what it was trained on, an AI model can call **MCP servers** to fetch live data, run actions, and integrate with real systems.
 
-8. **📚 Help & Documentation Hub (`Help & Docs`)**:
-   - Interactive Quickstart guide, REST API reference (cURL, Python, TS snippets), and architectural FAQs.
+This project is one such MCP server. Learn more about building and shipping MCP apps at [nitrostack.ai](https://nitrostack.ai).
 
-9. **ℹ️ About NitroStack Architecture (`About`)**:
-   - System specifications, AST prompt compression benchmarks, and ML satisfaction classifier details.
+## Features
 
----
+- 🔌 **MCP-native** — works with any MCP-compatible client (Claude, Cursor, and more)
+- 🛠️ **Tools, resources & prompts** — exposes structured capabilities to AI agents
+- ⚡ **Deployed on Nitrostack** — reliable, hosted, and instantly shareable
+- 🔐 **Secure by design** — secrets stay in environment variables, never in code
+- 🧩 **Composable** — combine with other MCP apps to build powerful AI workflows
 
-## 🏗️ Monorepo Structure
+## Live Demo
 
-```text
-TokenSlash/
-├── packages/
-│   ├── web/                     # React 18 + Vite + Tailwind UI Dashboard
-│   │   ├── src/
-│   │   │   ├── components/      # Dashboard, HistoryView, AnalyticsView, SavedPromptsView, 
-│   │   │   │                    # FavoritesView, RecentSessionsView, SettingsView, HelpDocsView, AboutView
-│   │   │   ├── mocks/           # Checkpoint Mock FinalReport Data (mockFinalReport.json)
-│   │   │   └── types/           # Synced Server Contracts (serverTypes.ts)
-│   └── server/                  # NitroStack MCP Server Tools & REST API Server
-│       └── src/
-│           ├── api_server.ts    # REST API Bridge Server (Port 3001)
-│           ├── tools/           # Model-Recommender & History-Analyzer MCP tools
-│           ├── ml/              # Python Logistic Regression Satisfaction Classifier
-│           └── shared/          # TypeScript Interfaces & Model Pricing Tables
-├── run_tokenslash.py             # Standalone Python Usage Intelligence Inference Engine
-├── DEMO.md                      # Hackathon Presentation Script
-└── README.md                    # Project Documentation
-```
+🚀 **Live MCP endpoint:** https://token-slash-main-serve-fable-stars-amrita-university-coimbatore.app.nitrocloud.ai
 
----
+Point your MCP client at the endpoint above to try it instantly. Prefer a hosted setup? Deploy your own in minutes on [Nitrostack](https://nitrostack.ai).
 
-## 🚀 Local Setup & Quickstart Guide
+## Getting Started
 
-### 1. Install Workspace Dependencies
+### Prerequisites
 
-Run `npm install` in the root workspace as well as in `packages/server` and `packages/web`:
+- Node.js 18+ (or your project runtime)
+- An MCP-compatible client (Claude Desktop, Cursor, etc.)
 
-```cmd
-:: Install root dependencies
-cmd.exe /c npm install
-
-:: Install backend server dependencies
-cmd.exe /c cd packages/server && npm install
-
-:: Install frontend web dependencies
-cmd.exe /c cd packages/web && npm install
-```
-
-### 2. Start the Backend API Bridge Server (Port 3001)
-
-```cmd
-cmd.exe /c npx tsx packages/server/src/api_server.ts
-```
-The REST API server will start listening at `http://localhost:3001`.
-
-### 3. Start the Frontend Web Dashboard (Port 3000)
-
-In a second terminal:
-
-```cmd
-cmd.exe /c npm --prefix packages/web run dev
-```
-Open your browser to `http://localhost:3000` to interact with the full TokenSlash application.
-
----
-
-## 🐍 Standalone Python Inference Runner
-
-TokenSlash includes a standalone Python ML runner for prompt analysis:
+### Installation
 
 ```bash
-python run_tokenslash.py "Refactor this React component step by step using Next.js Server Actions and Zod validation."
+git clone https://github.com/B-Sheikh/TokenSlash.git
+cd token-slash
+npm install
 ```
+
+### Configuration
+
+Copy the example environment file and add your own values:
+
+```bash
+cp .env.example .env
+```
+
+### Run
+
+```bash
+npm run start
+```
+
+## Connect to an MCP Client
+
+Add this server to your MCP client configuration. A typical entry looks like:
+
+```json
+{
+  "mcpServers": {
+    "token-slash": {
+      "url": "https://token-slash-main-serve-fable-stars-amrita-university-coimbatore.app.nitrocloud.ai"
+    }
+  }
+}
+```
+
+Restart your client and the tools from this MCP server will be available to your AI assistant.
+
+## Deploy Your Own MCP App
+
+Want to build and ship an MCP server like this one? **[Nitrostack](https://nitrostack.ai)** lets you create, deploy, and host MCP apps in minutes — no infrastructure to manage.
+
+👉 **Start building:** [https://nitrostack.ai](https://nitrostack.ai)
+
+## Explore More MCP Apps
+
+- 🌙 Discover and share MCP projects with the community on [r/mcptothemoon](https://www.reddit.com/r/mcptothemoon/)
+- 🧰 Browse a growing catalog of MCP apps on [Nitrostack](https://nitrostack.ai/apps)
+
+## FAQ
+
+### What is an MCP server?
+
+An MCP server implements the Model Context Protocol to expose tools, resources, and prompts that AI assistants can call. It lets an AI model take real actions and access live data.
+
+### What does Token-Slash do?
+
+TokenSlash is an advanced solution for prompt optimization and model selection that uses Artificial Intelligence as its driving force, leading to considerably lower costs, reduced tokens consumption, and shorter time spans for Large Language Model software.
+
+### Which AI clients does this work with?
+
+Any MCP-compatible client, including Claude Desktop and Cursor. New clients are adding MCP support regularly.
+
+### How do I deploy my own MCP app?
+
+Use [Nitrostack](https://nitrostack.ai) to build, deploy, and host MCP apps without managing infrastructure.
+
+## Keywords
+
+`Enterprise AI & Workplace Automation` · `Token-Slash` · `MCP` · `Model Context Protocol` · `MCP server` · `MCP app` · `AI tools` · `AI agents` · `LLM tools` · `Claude MCP` · `Nitrostack` · `deploy MCP server` · `build MCP app`
+
+## License
+
+MIT © 2026
 
 ---
 
-## 🛡️ Architecture & Resilience
-
-- **Sub-3 Second Execution**: Real-time AST prompt analysis, token reduction telemetry, and cost trade-off comparisons.
-- **Resilient Graceful Degradation**: If the local backend server is offline during a demonstration, the frontend seamlessly falls back to formatted mock reports (`mockFinalReport.json`) with zero console errors.
-- **Strict Separation of Concerns**: Monorepo structure separating UI presentation (`packages/web`) from backend MCP tools (`packages/server`).
+Built with ❤️ using the Model Context Protocol on [Nitrostack](https://nitrostack.ai). Share your MCP app on [r/mcptothemoon](https://www.reddit.com/r/mcptothemoon/).
